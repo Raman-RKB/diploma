@@ -1,7 +1,10 @@
 // import React, { useContext, useState, useEffect } from 'react';
-import CardsItem from "./cardsitem";
+import CardsItem from "../../modal/cardsitem";
 import Logo from '../img/logo.png';
 import LogoMob from '../img/logo-mob.png';
+import { NavLink } from "react-router-dom";
+import FooterAll from '../../modal/footer';
+import { allAdv } from '../../../Store/API/api';
 
 import {
     Container,
@@ -20,16 +23,27 @@ import {
     MainContainer,
     MainH2,
     MainContent,
-    Cards
-} from '../css/mainNotRegStyle';
+    ContentCards
+} from '../style/mainNotRegStyle';
+
+const HandleSearchClick = () => {
+
+    const getAllArticles = async () => {
+        const resutArticles = await allAdv();
+        console.log(resutArticles)
+    }
+    alert(getAllArticles)
+}
+
 
 const MainNotReg = () => {
-
     return (
         <Container>
             <Header>
                 <HeaderNav>
-                    <HeaderBtnMainEnter>Вход в личный кабинет</HeaderBtnMainEnter>
+                    <NavLink to={`/login`} replace>
+                        <HeaderBtnMainEnter>Вход в личный кабинет</HeaderBtnMainEnter>
+                    </NavLink>
                 </HeaderNav>
             </Header>
             <main>
@@ -43,13 +57,13 @@ const MainNotReg = () => {
                     <SearchForm>
                         <SearchText type="search" placeholder="Поиск по объявлениям" name="search" />
                         <SearchTextMob type="search" placeholder="Поиск" name="search-mob" />
-                        <SearchBtn>Найти</SearchBtn>
+                        <SearchBtn onClick={HandleSearchClick}>Найти</SearchBtn>
                     </SearchForm>
                 </MainSearch>
                 <MainContainer>
                     <MainH2>Объявления</MainH2>
                     <MainContent>
-                        <Cards>
+                        <ContentCards>
                             <CardsItem title="Ракетка для большого тенниса Triumph Pro ST"
                                 price="2&nbsp;200&nbsp;₽"
                                 place="Санкт Петербург"
@@ -90,10 +104,11 @@ const MainNotReg = () => {
                                 price="2&nbsp;200&nbsp;₽"
                                 place="Санкт Петербург"
                                 date="Сегодня в&nbsp;10:45" />
-                        </Cards>
+                        </ContentCards>
                     </MainContent>
                 </MainContainer>
             </main >
+            <FooterAll media="590px" />
         </Container>
     );
 };

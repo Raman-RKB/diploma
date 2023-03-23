@@ -7,6 +7,7 @@ export const GlobalStyle = createGlobalStyle`
   padding: 0;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
+           outline: none;
   }
 
   *:before,
@@ -37,6 +38,7 @@ export const GlobalStyle = createGlobalStyle`
   height: 100%;
   font-family: 'Roboto', sans-serif;
   color: #000000;
+  box-sizing: border-box;
   }
 
   div,
@@ -44,18 +46,6 @@ export const GlobalStyle = createGlobalStyle`
   a {
   font-family: 'Roboto', sans-serif;
   }
-
-    // ========== fonts ========
-  @font-face {
-    font-family: 'Roboto';
-    src: local('Roboto'), local('Roboto'),
-        url('../fonts/Roboto-Bold.ttf') format('ttf'),
-    font-weight: 500;
-    font-style: normal;
-  }
-
-  //--------------------------
-
 `;
 
 export const Wrapper = styled.div`

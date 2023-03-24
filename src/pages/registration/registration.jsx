@@ -3,8 +3,10 @@
 // import Logo from '../img/logo.png';
 import logoModal from './img/logo_modal.png';
 import { Wrapper, GlobalStyle } from './style/globalStyle';
-import { NavLink } from "react-router-dom";
 import FooterAll from '../modal/footer';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
+import { useRegisterUserMutation } from '../../services/servises';
 
 import {
     ModalBtnSignupEnt,
@@ -17,6 +19,60 @@ import {
 } from './style/registrationStyle';
 
 const Registration = () => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [repeatPassword, setRepeatPassword] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [city, setCity] = useState('');
+
+    const navigate = useNavigate();
+    const [registerUser, { data }] = useRegisterUserMutation();
+
+    const handleRegister = (event) => {
+        event.preventDefault();
+        if (password === repeatPassword) {
+
+            const userData = { email, password, firstName, lastName, city };
+            registerUser(userData);
+
+        } else {
+            alert("Пароли не совпадают")
+        };
+    };
+
+    useEffect(() => {
+        if (data) {
+            navigate("/login", { replace: true });
+        } else {
+            console.log('ошибки!!!');
+        }
+    }, [data]);
+
+
+    const handleEmailChange = (event) => {
+        setEmail(event.target.value);
+    };
+
+    const handlePasswordChange = (event) => {
+        setPassword(event.target.value);
+    };
+
+    const handleRepeatPasswordChange = (event) => {
+        setRepeatPassword(event.target.value);
+    }
+
+    const handleFirstNameChange = (event) => {
+        setFirstName(event.target.value);
+    }
+
+    const handleLastNameChange = (event) => {
+        setLastName(event.target.value);
+    }
+
+    const handleCityChange = (event) => {
+        setCity(event.target.value);
+    }
 
     return (
         <>
@@ -28,15 +84,13 @@ const Registration = () => {
                             <ModalLogo>
                                 <LogoImg src={logoModal} alt="logo" />
                             </ModalLogo>
-                            <ModalInput type="text" name="login" id="loginReg" placeholder="email" />
-                            <ModalInput type="password" name="password" id="passwordFirst" placeholder="Пароль" />
-                            <ModalInput type="password" name="password" id="passwordSecond" placeholder="Повторите пароль" />
-                            <ModalInput type="text" name="first-name" id="first-name" placeholder="Имя (необязательно)" />
-                            <ModalInput type="text" name="first-last" id="first-last" placeholder="Фамилия (необязательно)" />
-                            <ModalInput type="text" name="city" id="city" placeholder="Город (необязательно)" />
-                            <NavLink to={`/profile`} replace>
-                                <ModalBtnSignupEnt id="btnSignUp">Зарегистрироваться</ModalBtnSignupEnt>
-                            </NavLink>
+                            <ModalInput type="text" name="login" id="loginReg" placeholder="email" onChange={handleEmailChange} />
+                            <ModalInput type="password" name="password" id="passwordFirst" placeholder="Пароль" onChange={handlePasswordChange} />
+                            <ModalInput type="password" name="password" id="passwordSecond" placeholder="Повторите пароль" onChange={handleRepeatPasswordChange} />
+                            <ModalInput type="text" name="first-name" id="first-name" placeholder="Имя (необязательно)" onChange={handleFirstNameChange} />
+                            <ModalInput type="text" name="first-last" id="first-last" placeholder="Фамилия (необязательно)" onChange={handleLastNameChange} />
+                            <ModalInput type="text" name="city" id="city" placeholder="Город (необязательно)" onChange={handleCityChange} />
+                            <ModalBtnSignupEnt onClick={handleRegister} id="btnSignUp">Зарегистрироваться</ModalBtnSignupEnt>
                         </ModalFormLogin>
                     </ModalBlock>
                 </ContainerSignup>

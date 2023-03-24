@@ -521,7 +521,6 @@ export const ModalReviews = styled.div`
 export const ReviewsReview = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
   margin: 15px 0;
 `;
 

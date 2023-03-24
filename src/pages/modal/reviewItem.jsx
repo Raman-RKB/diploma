@@ -14,7 +14,11 @@ import {
     ReviewName
 } from './style/reviewStyle';
 
-const ReviewItems = () => {
+const ReviewItems = (reviews) => {
+
+    const dateString = reviews.reviews.created_on;
+    const date = new Date(dateString);
+    const formattedDate = date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
 
     return (
         <ReviewsReview>
@@ -25,9 +29,9 @@ const ReviewItems = () => {
                     </ReviewImgContainer>
                 </ReviewLeft>
                 <ReviewRight>
-                    <ReviewName>Олег<ReviewNameSpan>14 августа</ReviewNameSpan></ReviewName>
+                    <ReviewName>{reviews.reviews.author.name}<ReviewNameSpan>{formattedDate}</ReviewNameSpan></ReviewName>
                     <ReviewTitle>Комментарий</ReviewTitle>
-                    <ReviewText>Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore tempore suscipit nostrum minus a sit commodi, distinctio veniam. Voluptates, tempore. Est officiis explicabo quas sed reprehenderit aliquam cumque vel? Iste.</ReviewText>
+                    <ReviewText>{reviews.reviews.text}</ReviewText>
                 </ReviewRight>
             </ReviewItem>
         </ReviewsReview>

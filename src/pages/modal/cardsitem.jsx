@@ -12,20 +12,20 @@ import {
     CardsItem,
     CardImage,
     CardContainer
-} from '../main/style/mainNotRegStyle';
+} from './style/cardsItemStyle';
 
-const Cardsitem = ({ title, price, place, date, article }) => {
+const Cardsitem = ({ id, title, price, place, date, article, picture }) => {
 
     return (
         <CardsItem>
             <CardsCard>
-                <NavLink to={article ? `/myadvpage` : `/product`} replace>
+                <NavLink to={article ? `/myadvpage` : `/product/${id}`} replace>
                     <CardImageContainer>
-                        <CardImage src="#" alt="picture" />
+                        <CardImage src={picture} alt="picture" />
                     </CardImageContainer>
                 </NavLink>
                 <CardContainer>
-                    <NavLink to={article ? `/myadvpage` : `/product`} replace>
+                    <NavLink to={article ? `/myadvpage` : `/product/${id}`} replace>
                         <CardTitle>{title}</CardTitle>
                     </NavLink>
                     <CardPrice>{price}</CardPrice>

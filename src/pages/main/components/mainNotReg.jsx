@@ -1,10 +1,10 @@
-// import React, { useContext, useState, useEffect } from 'react';
 import CardsItem from "../../modal/cardsitem";
 import Logo from '../img/logo.png';
 import LogoMob from '../img/logo-mob.png';
 import { NavLink } from "react-router-dom";
 import FooterAll from '../../modal/footer';
-import { allAdv } from '../../../Store/API/api';
+import React, { useState, useEffect } from 'react';
+import { useGetAlladvtQuery } from '../../../services/servises';
 
 import {
     Container,
@@ -26,17 +26,32 @@ import {
     ContentCards
 } from '../style/mainNotRegStyle';
 
-const HandleSearchClick = () => {
-
-    const getAllArticles = async () => {
-        const resutArticles = await allAdv();
-        console.log(resutArticles)
-    }
-    alert(getAllArticles)
-}
-
-
 const MainNotReg = () => {
+    const { data } = useGetAlladvtQuery();
+    const [searchInputValue, setSearchInputValue] = useState("");
+    const [searchResults, setSearchResults] = useState([]);
+    
+    const handleSearchInputChange = (event) => {
+        setSearchInputValue(event.target.value);
+    };
+
+    const HandleSearchClick = async (event) => {
+        event.preventDefault();
+        SearchProducts(data, searchInputValue)
+    }
+
+    const SearchProducts = async (data, keyword) => {
+        const regex = new RegExp(keyword, 'i');
+        const results = data.filter(product => regex.test(product.title) || regex.test(product.description));
+        setSearchResults(results);
+    }
+
+    useEffect(() => {
+        if (data) {
+            setSearchResults(data);
+        }
+    }, [data]);
+
     return (
         <Container>
             <Header>
@@ -55,55 +70,46 @@ const MainNotReg = () => {
                         <SearchLogoMobImg src={LogoMob}></SearchLogoMobImg>
                     </SearchLogoMobLink>
                     <SearchForm>
-                        <SearchText type="search" placeholder="Поиск по объявлениям" name="search" />
-                        <SearchTextMob type="search" placeholder="Поиск" name="search-mob" />
-                        <SearchBtn onClick={HandleSearchClick}>Найти</SearchBtn>
+                        <SearchText onChange={handleSearchInputChange}
+                            type="search"
+                            placeholder="Поиск по объявлениям"
+                            name="search" />
+                        <SearchTextMob
+                            type="search"
+                            placeholder="Поиск"
+                            name="search-mob" />
+                        <SearchBtn
+                            onClick={HandleSearchClick}>
+                            Найти
+                        </SearchBtn>
                     </SearchForm>
                 </MainSearch>
                 <MainContainer>
                     <MainH2>Объявления</MainH2>
                     <MainContent>
                         <ContentCards>
-                            <CardsItem title="Ракетка для большого тенниса Triumph Pro ST"
-                                price="2&nbsp;200&nbsp;₽"
-                                place="Санкт Петербург"
-                                date="Сегодня в&nbsp;10:45" />
-                            <CardsItem title="Ракетка для большого тенниса Triumph Pro ST"
-                                price="2&nbsp;200&nbsp;₽"
-                                place="Санкт Петербург"
-                                date="Сегодня в&nbsp;10:45" />
-                            <CardsItem title="Ракетка для большого тенниса Triumph Pro ST"
-                                price="2&nbsp;200&nbsp;₽"
-                                place="Санкт Петербург"
-                                date="Сегодня в&nbsp;10:45" />
-                            <CardsItem title="Ракетка для большого тенниса Triumph Pro ST"
-                                price="2&nbsp;200&nbsp;₽"
-                                place="Санкт Петербург"
-                                date="Сегодня в&nbsp;10:45" />
-                            <CardsItem title="Ракетка для большого тенниса Triumph Pro ST"
-                                price="2&nbsp;200&nbsp;₽"
-                                place="Санкт Петербург"
-                                date="Сегодня в&nbsp;10:45" />
-                            <CardsItem title="Ракетка для большого тенниса Triumph Pro ST"
-                                price="2&nbsp;200&nbsp;₽"
-                                place="Санкт Петербург"
-                                date="Сегодня в&nbsp;10:45" />
-                            <CardsItem title="Ракетка для большого тенниса Triumph Pro ST"
-                                price="2&nbsp;200&nbsp;₽"
-                                place="Санкт Петербург"
-                                date="Сегодня в&nbsp;10:45" />
-                            <CardsItem title="Ракетка для большого тенниса Triumph Pro ST"
-                                price="2&nbsp;200&nbsp;₽"
-                                place="Санкт Петербург"
-                                date="Сегодня в&nbsp;10:45" />
-                            <CardsItem title="Ракетка для большого тенниса Triumph Pro ST"
-                                price="2&nbsp;200&nbsp;₽"
-                                place="Санкт Петербург"
-                                date="Сегодня в&nbsp;10:45" />
-                            <CardsItem title="Ракетка для большого тенниса Triumph Pro ST"
-                                price="2&nbsp;200&nbsp;₽"
-                                place="Санкт Петербург"
-                                date="Сегодня в&nbsp;10:45" />
+                            {searchResults === '' ? data.map((item) => (
+                                <CardsItem 
+                                    key={item.id}
+                                    id={item.id}
+                                    title={item.title}
+                                    price={item.price}
+                                    place={item.user.city}
+                                    date={item.created_on.split("T")[0]}
+                                    picture={`http://localhost:8090/${item.images[0]?.url}`}
+                                />
+                            )) :
+                                searchResults.map((item) => (
+                                    <CardsItem
+                                        key={item.id}
+                                         id={item.id}
+                                        title={item.title}
+                                        price={item.price}
+                                        place={item.user.city}
+                                        date={item.created_on.split("T")[0]}
+                                        picture={`http://localhost:8090/${item.images[0]?.url}`}
+                                    />
+                                ))}
                         </ContentCards>
                     </MainContent>
                 </MainContainer>

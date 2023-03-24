@@ -4,7 +4,9 @@
 
 import { Wrapper, GlobalStyle } from './style/globalStyle';
 import ReviewItems from './reviewItem';
-// import { NavLink } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import { useGetAdvtCommentsQuery } from "../../services/servises";
+import { NavLink } from "react-router-dom";
 
 import {
     ContainerBg,
@@ -23,6 +25,8 @@ import {
 } from './style/reviewStyle';
 
 const MainNotReg = () => {
+    let { id } = useParams();
+    const { data } = useGetAdvtCommentsQuery(id);
 
     return (
         <>
@@ -33,7 +37,9 @@ const MainNotReg = () => {
                         <ModalContent>
                             <ModalTitle>Отзывы о товаре</ModalTitle>
                             <ModalBtnClose>
-                                <ModalBtnCloseLine></ModalBtnCloseLine>
+                                <NavLink to={`/product/${id}`} replace>
+                                    <ModalBtnCloseLine></ModalBtnCloseLine>
+                                </NavLink>
                             </ModalBtnClose>
                             <ModalScroll>
                                 <ModalFormNewArt>
@@ -45,11 +51,9 @@ const MainNotReg = () => {
                                     <FormNewArtBtnPub>Опубликовать</FormNewArtBtnPub>
                                 </ModalFormNewArt>
                                 <ModalReviews>
-                                    <ReviewItems />
-                                    <ReviewItems />
-                                    <ReviewItems />
-                                    <ReviewItems />
-                                    <ReviewItems />
+                                    {data && data.map((item) => (
+                                        <ReviewItems key={item.id} reviews={item} />
+                                    ))}
                                 </ModalReviews>
                             </ModalScroll>
 

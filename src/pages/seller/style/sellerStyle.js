@@ -379,7 +379,7 @@ export const SellerBtn = styled.button`
   width: 214px;
   height: 62px;
   font-size: 16px;
-  font-weight: 500;
+   font-weight: 600;
   line-height: 22px;
   color: #FFFFFF;
   font-family: "Roboto", sans-serif;
@@ -388,7 +388,7 @@ export const SellerBtn = styled.button`
     width: 100%;
     height: 57px;
     font-size: 16px;
-    font-weight: 500;
+     font-weight: 600;
     line-height: 20px;
     }
 `;
@@ -396,7 +396,7 @@ export const SellerBtn = styled.button`
 export const SellerBtnSpan = styled.span`
   display: block;
   font-size: 14px;
-  font-weight: 400;
+   font-weight: 600;
 
   @media screen and (max-width: 580px) {
     font-size: 12px;
@@ -407,7 +407,7 @@ export const MainTitle = styled.h3`
   margin-bottom: 20px;
   font-size: 32px;
   line-height: 40px;
-  font-weight: 500;
+   font-weight: 600;
   color: #000000;
 
   @media screen and (max-width: 580px) {
@@ -527,7 +527,7 @@ export const CardInfoContainer = styled.div`
 export const CardTitle = styled.h3`
   height: 52px;
   font-size: 22px;
-  font-weight: 500;
+   font-weight: 600;
   line-height: 26px;
   color: #009EE4;
   margin-bottom: 10px;
@@ -548,7 +548,7 @@ export const CardTitle = styled.h3`
 export const CardPrice = styled.p`
   color: #000000;
   font-size: 22px;
-  font-weight: 500;
+   font-weight: 600;
   line-height: 33px;
   margin-bottom: 10px;
 

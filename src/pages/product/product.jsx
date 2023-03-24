@@ -1,10 +1,14 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-debugger */
 // import React, { useContext, useState, useEffect } from 'react';
 import Logo from './img/logo.png';
 import LogoMob from './img/logo-mob.png';
 import FooterAll from '../modal/footer';
-
+import { useParams } from "react-router-dom";
+import { useGetAlladvtQuery } from '../../services/servises';
 import { NavLink } from "react-router-dom";
 import { Wrapper, GlobalStyle } from './style/globalStyle';
+import React, { useState, useEffect } from 'react';
 
 import {
     Container,
@@ -54,6 +58,25 @@ import {
 } from './style/productStyle';
 
 const MainNotReg = () => {
+    const [adv, setAdv] = useState();
+    const [showPhone, setShowPhone] = useState(false);
+    const { data } = useGetAlladvtQuery();
+    let { id } = useParams();
+    
+    const showPhoneClick = () => {
+        setShowPhone(true)
+    };
+
+    useEffect(() => {
+        let i = 0
+        let idNum = parseInt(id);
+        for (i = 0; i < data?.length; i++) {
+            if (data[i].id === idNum) {
+                setAdv(data[i])
+                break;
+            }
+        }
+    }, [data, id]);
 
     return (
         <>
@@ -95,26 +118,26 @@ const MainNotReg = () => {
                                 <ArticleLeft>
                                     <ArticleFillImg>
                                         <ArticleImgContainer>
-                                            <ArticleImg />
+                                            <ArticleImg src={`http://localhost:8090/${adv?.images[0]?.url}`} />
                                         </ArticleImgContainer>
                                         <ArticleImgBar>
                                             <ArticleImgBarDiv>
-                                                <ArticleImgBarDivImg />
+                                                <ArticleImgBarDivImg src={`http://localhost:8090/${adv?.images[1]?.url}`} />
                                             </ArticleImgBarDiv>
                                             <ArticleImgBarDiv>
-                                                <ArticleImgBarDivImg />
+                                                <ArticleImgBarDivImg src={`http://localhost:8090/${adv?.images[2]?.url}`} />
                                             </ArticleImgBarDiv>
                                             <ArticleImgBarDiv>
-                                                <ArticleImgBarDivImg />
+                                                <ArticleImgBarDivImg src={`http://localhost:8090/${adv?.images[3]?.url}`} />
                                             </ArticleImgBarDiv>
                                             <ArticleImgBarDiv>
-                                                <ArticleImgBarDivImg />
+                                                <ArticleImgBarDivImg src={`http://localhost:8090/${adv?.images[4]?.url}`} />
                                             </ArticleImgBarDiv>
                                             <ArticleImgBarDiv>
-                                                <ArticleImgBarDivImg />
+                                                <ArticleImgBarDivImg src={`http://localhost:8090/${adv?.images[5]?.url}`} />
                                             </ArticleImgBarDiv>
                                             <ArticleImgBarDiv>
-                                                <ArticleImgBarDivImg />
+                                                <ArticleImgBarDivImg src={`http://localhost:8090/${adv?.images[6]?.url}`} />
                                             </ArticleImgBarDiv>
                                         </ArticleImgBar>
                                         <ArticleImgBarMob>
@@ -128,29 +151,34 @@ const MainNotReg = () => {
                                 </ArticleLeft>
                                 <ArticleRight>
                                     <ArticleBlock>
-                                        <NavLink to={`/product`} replace>
-                                            <ArticleTitle>Ракетка для большого тенниса Triumph Pro STС Б/У</ArticleTitle>
-                                        </NavLink>
+                                        <ArticleTitle>{adv?.title}</ArticleTitle>
                                         <ArticleInfo>
-                                            <ArticleDate>Сегодня в 10:45</ArticleDate>
-                                            <ArticleCity>Санкт-Петербург</ArticleCity>
+                                            <ArticleDate>{adv?.created_on.split("T")[0]}</ArticleDate>
+                                            <ArticleCity>{adv?.user.city}</ArticleCity>
                                             <NavLink to={`/reviews`} replace>
-                                                <ArticleLink>4 отзыва</ArticleLink>
+                                                <NavLink to={`/reviews/${id}`} replace>
+                                                    <ArticleLink>отзывы</ArticleLink>
+                                                </NavLink>
                                             </NavLink>
                                         </ArticleInfo>
-                                        <ArticlePrice>2 200 ₽</ArticlePrice>
-                                        <ArticleBtn>Показать&nbsp;телефон
-                                            <ArticleBtnSpan>8&nbsp;905&nbsp;ХХХ&nbsp;ХХ&nbsp;ХХ</ArticleBtnSpan>
+                                        <ArticlePrice>{adv?.price}</ArticlePrice>
+                                        <ArticleBtn onClick={showPhoneClick}>Показать&nbsp;телефон
+                                            <ArticleBtnSpan>
+                                                {!showPhone
+                                                    ? `${adv?.user.phone.substring(0, 1)}${adv?.user.phone.substring(1, 4)} XXX XX XX`
+                                                    : adv?.user.phone
+                                                }
+                                            </ArticleBtnSpan>
                                         </ArticleBtn>
                                         <ArticleAuthor>
                                             <AuthorImgContainer>
-                                                <AuthorImg />
+                                                <AuthorImg src={`http://localhost:8090/${adv?.user.avatar}`} />
                                             </AuthorImgContainer>
                                             <AuthorCont>
-                                                <NavLink to={`/seller`} replace>
-                                                    <AuthorName>Антон</AuthorName>
+                                                <NavLink to={`/seller/${id}`} replace>
+                                                    <AuthorName>{adv?.user.name}</AuthorName>
                                                 </NavLink>
-                                                <AuthorAbout>Продает товары с&nbsp;мая 2022</AuthorAbout>
+                                                <AuthorAbout>Продает товары с&nbsp;{adv?.user.sells_from}</AuthorAbout>
                                             </AuthorCont>
                                         </ArticleAuthor>
                                     </ArticleBlock>
@@ -163,7 +191,7 @@ const MainNotReg = () => {
                             </Maintitle>
                             <MainContent>
                                 <MainText>
-                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores et minus saepe iste autem aliquam dolores totam at iure cum. Autem, aliquid architecto perspiciatis earum iure mollitia odit doloremque accusamus.
+                                    {adv?.description}
                                 </MainText>
                             </MainContent>
                         </MainContainer>

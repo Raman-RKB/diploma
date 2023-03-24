@@ -3,9 +3,12 @@ import Logo from './img/logo.png';
 import LogoMob from './img/logo-mob.png';
 import FooterAll from '../modal/footer';
 import CardsItemRender from './components/cardItem';
+import { useParams } from "react-router-dom";
 
 import { NavLink } from "react-router-dom";
 import { Wrapper, GlobalStyle } from './style/globalStyle';
+import React, { useState, useEffect } from 'react';
+import { useGetAlladvtQuery } from '../../services/servises';
 
 import {
     Container,
@@ -44,6 +47,37 @@ import {
 } from './style/sellerStyle';
 
 const MainNotReg = () => {
+    let { id } = useParams();
+    const { data } = useGetAlladvtQuery();
+    const [adv, setAdv] = useState();
+    const [showPhone, setShowPhone] = useState(false);
+    const [sellerAdvs, setSellerAdvs] = useState([]);
+
+    console.log(sellerAdvs, 'sellerAdvs')
+
+    const showPhoneClick = () => {
+        setShowPhone(true)
+    };
+
+    useEffect(() => {
+        let i = 0
+        let idToNumber = parseInt(id);
+        for (i = 0; i < data?.length; i++) {
+            if (data[i].id === idToNumber) {
+                setAdv(data[i])
+                break;
+            }
+
+        }
+    }, [data, id]);
+
+    useEffect(() => {
+        if (adv?.user) {
+            let userId = adv.user_id;
+            let sellerAdvs = data.filter(item => item.user_id === userId);
+            setSellerAdvs(sellerAdvs);
+        }
+    }, [adv, data]);
 
     return (
         <>
@@ -80,20 +114,25 @@ const MainNotReg = () => {
                                         <ProfileSellSeller>
                                             <SellerLeft>
                                                 <SellerImgContainer>
-                                                    <SellerImg />
+                                                    <SellerImg src={`http://localhost:8090/${adv?.user.avatar}`} />
                                                 </SellerImgContainer>
                                             </SellerLeft>
                                             <SellerRight>
-                                                <SellerTitle>Кирилл Матвеев</SellerTitle>
-                                                <SellerCity>Санкт-Петербург</SellerCity>
-                                                <SellerInf>Продает товары с августа 2021</SellerInf>
+                                                <SellerTitle>{adv?.user.name}</SellerTitle>
+                                                <SellerCity>{adv?.user.city}</SellerCity>
+                                                <SellerInf>Продает товары с {adv?.user.sells_from}</SellerInf>
                                                 <SellerImgMobBlock>
                                                     <SellerImgMobContainer>
-                                                        <SellerImgMob />
+                                                        <SellerImgMob src={`http://localhost:8090/${adv?.user.avatar}`} />
                                                     </SellerImgMobContainer>
                                                 </SellerImgMobBlock>
-                                                <SellerBtn>Показать&nbsp;телефон
-                                                    <SellerBtnSpan>8&nbsp;905&nbsp;ХХХ&nbsp;ХХ&nbsp;ХХ</SellerBtnSpan>
+                                                <SellerBtn onClick={showPhoneClick}>Показать&nbsp;телефон
+                                                    <SellerBtnSpan>
+                                                        {!showPhone
+                                                            ? `${adv?.user.phone.substring(0, 1)}${adv?.user.phone.substring(1, 4)} XXX XX XX`
+                                                            : adv?.user.phone
+                                                        }
+                                                    </SellerBtnSpan>
                                                 </SellerBtn>
                                             </SellerRight>
                                         </ProfileSellSeller>
@@ -103,17 +142,22 @@ const MainNotReg = () => {
                             </MainCenterBlock>
                             <MainContent>
                                 <Cards>
-                                    <CardsItemRender />
-                                    <CardsItemRender />
-                                    <CardsItemRender />
-                                    <CardsItemRender />
-                                    <CardsItemRender />
-                                    <CardsItemRender />
+                                    {sellerAdvs?.map((item) => (
+                                        <CardsItemRender
+                                            key={item?.id}
+                                            id={item.id}
+                                            title={item.title}
+                                            price={item.price}
+                                            place={item.user.city}
+                                            date={item.created_on.split("T")[0]}
+                                            picture={`http://localhost:8090/${item.images[0]?.url}`}
+                                        />
+                                    ))}
                                 </Cards>
                             </MainContent>
                         </MainContainer>
                     </main >
- <FooterAll media="580px"/>
+                    <FooterAll media="580px" />
                 </Container>
             </Wrapper>
         </>

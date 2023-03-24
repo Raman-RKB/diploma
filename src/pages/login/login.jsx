@@ -1,10 +1,11 @@
-// import React, { useContext, useState, useEffect } from 'react';
-
-// import Logo from '../img/logo.png';
 import logoModal from './img/logo_modal.png';
 import { Wrapper, GlobalStyle } from './style/globalStyle';
 import { NavLink } from "react-router-dom";
 import FooterAll from '../modal/footer';
+import { useLoginUserMutation } from '../../services/servises';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
+import { AppRoutes } from '../../AppRoutes';
 
 import {
     ContainerEnter,
@@ -18,40 +19,71 @@ import {
     ModalBtnSignup
 } from './style/loginStyle';
 
-const MainNotReg = () => {
+const Login = () => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [user, setUser] = useState(null);
+    const [loginUser, { data }] = useLoginUserMutation();
+
+    const navigate = useNavigate();
+
+    const handleLogin = (event) => {
+        event.preventDefault();
+        const userData = { email, password };
+        loginUser(userData);
+    }
+
+    useEffect(() => {
+        if (data) {
+            setUser(true)
+            navigate("/profile", { replace: true });
+        } else {
+
+            console.log('ошибки!!!');
+        }
+    }, [data, navigate]);
+
+    const handleEmailChange = (event) => {
+        setEmail(event.target.value);
+    };
+
+    const handlePasswordChange = (event) => {
+        setPassword(event.target.value);
+    };
 
     return (
         <>
+            <AppRoutes user={user} />
             <GlobalStyle />
             <Wrapper>
                 <ContainerEnter>
                     <ModalBlock>
                         <ModalFormLogin id="formLogIn" action="#">
                             <ModalLogo>
-                                <NavLink to={`/`} replace>
+                                <NavLink to={`/profile`} replace>
                                     <ModalLogoImg src={logoModal} alt="logo"></ModalLogoImg>
                                 </NavLink>
                             </ModalLogo>
                             <ModalInput
+                                onChange={handleEmailChange}
                                 type="text"
                                 name="login"
                                 id="formlogin"
                                 placeholder="email"
                             />
                             <ModalInputPassword
+                                onChange={handlePasswordChange}
                                 type="password"
                                 name="password"
                                 id="formpassword"
                                 placeholder="Пароль"
                             />
-                            <NavLink to={`/profile`} replace>
-                                <ModalBtnEnter id="btnEnter">Войти</ModalBtnEnter>
-                            </NavLink>
+                            <ModalBtnEnter id="btnEnter" onClick={handleLogin}>Войти</ModalBtnEnter>
                             <NavLink to={`/registaration`} replace>
-                                <ModalBtnSignup id="btnSignUp">Зарегистрироваться</ModalBtnSignup>
+                                <ModalBtnSignup id="btnSignUp" >Зарегистрироваться</ModalBtnSignup>
                             </NavLink>
                         </ModalFormLogin>
-                        <FooterAll media="768px"/>
+                        <FooterAll media="768px" />
                     </ModalBlock>
                 </ContainerEnter>
             </Wrapper>
@@ -59,4 +91,4 @@ const MainNotReg = () => {
     );
 };
 
-export default MainNotReg;
+export default Login;

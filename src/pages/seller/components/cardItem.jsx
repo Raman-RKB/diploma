@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 // import React, { useContext, useState, useEffect } from 'react';
 import { NavLink } from "react-router-dom";
 import {
@@ -12,23 +13,27 @@ import {
     CardInfoContainer
 } from '../style/sellerStyle';
 
-const CardsItemRender = () => {
+const CardsItemRender = ({ id, title, price, place, date, picture }) => {
 
     return (
         <CardsItem>
             <СardsСard>
                 <CardImageContainer>
-                    <NavLink to={`/product`} replace>
-                        <CardImage />
-                    </NavLink>
+                    {id && (
+                        <NavLink to={`/product/${id}`} replace>
+                            <CardImage src={picture} />
+                        </NavLink>
+                    )}
                 </CardImageContainer>
                 <CardInfoContainer>
-                    <NavLink to={`/product`} replace>
-                        <CardTitle>Ракетка для большого тенниса Triumph Pro ST</CardTitle>
-                    </NavLink>
-                    <CardPrice>2&nbsp;200&nbsp;₽</CardPrice>
-                    <CardPlace>Санкт Петербург</CardPlace>
-                    <CardDate>Сегодня в&nbsp;10:45</CardDate>
+                    {id && (
+                        <NavLink to={`/product${id}`} replace>
+                            <CardTitle>{title}</CardTitle>
+                        </NavLink>
+                    )}
+                    {price && <CardPrice>{price}</CardPrice>}
+                    {place && <CardPlace>{place}</CardPlace>}
+                    {date && <CardDate>Размещено {date}</CardDate>}
                 </CardInfoContainer>
             </СardsСard>
         </CardsItem>

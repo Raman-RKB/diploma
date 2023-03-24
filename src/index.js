@@ -6,11 +6,9 @@ import { ThemeProvider } from './ThemeContext';
 import { Provider } from 'react-redux';
 import store from './Store/store';
 
-const theme = 'dark';
-
 ReactDOM.render(
   <React.StrictMode>
-    <ThemeProvider theme={theme}>
+    <ThemeProvider>
       <BrowserRouter>
         <Provider store={store}>
         <App />

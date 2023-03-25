@@ -22,7 +22,7 @@ import {
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState(false);
     const [loginUser, { data }] = useLoginUserMutation();
 
     const navigate = useNavigate();
@@ -53,7 +53,6 @@ const Login = () => {
 
     return (
         <>
-            <AppRoutes user={user} />
             <GlobalStyle />
             <Wrapper>
                 <ContainerEnter>
@@ -87,6 +86,8 @@ const Login = () => {
                     </ModalBlock>
                 </ContainerEnter>
             </Wrapper>
+            <AppRoutes user={user} />
+
         </>
     );
 };

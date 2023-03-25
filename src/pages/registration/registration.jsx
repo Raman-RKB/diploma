@@ -22,8 +22,8 @@ const Registration = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [repeatPassword, setRepeatPassword] = useState('');
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
+    const [name, setName] = useState('');
+    const [surname, setSurname] = useState('');
     const [city, setCity] = useState('');
 
     const navigate = useNavigate();
@@ -33,7 +33,7 @@ const Registration = () => {
         event.preventDefault();
         if (password === repeatPassword) {
 
-            const userData = { email, password, firstName, lastName, city };
+            const userData = { email, password, name, surname, city };
             registerUser(userData);
 
         } else {
@@ -63,11 +63,11 @@ const Registration = () => {
     }
 
     const handleFirstNameChange = (event) => {
-        setFirstName(event.target.value);
+       setName(event.target.value);
     }
 
     const handleLastNameChange = (event) => {
-        setLastName(event.target.value);
+        setSurname(event.target.value);
     }
 
     const handleCityChange = (event) => {

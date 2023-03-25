@@ -1,11 +1,16 @@
+/* eslint-disable no-debugger */
 // import React, { useContext, useState, useEffect } from 'react';
-import CardsItem from "../modal/cardsitem";
 import Logo from './img/logo.png';
 import LogoMob from './img/logo-mob.png';
-import FooterAll from '../modal/footer';;
+import FooterAll from '../modal/footer';
+// import CardsItemRender from '../modal/cardsitem';
 
 import { NavLink } from "react-router-dom";
 import { Wrapper, GlobalStyle } from './style/globalStyle';
+import { useGetCurrentUserMutation } from '../../services/servises';
+import { useRefreshTokenMutation } from '../../services/servises';
+import { useGetCurrentUserAdvtQuery } from '../../services/servises';
+import React, { useEffect } from 'react';
 
 import {
     Container,
@@ -43,7 +48,25 @@ import {
     ContentCards,
 } from './style/profileStyle';
 
-const MainNotReg = () => {
+const Profile = () => {
+    
+    const [getCurrentUser, { data: currentUser }] = useGetCurrentUserMutation();
+    const [getCurrentUserAdvt] = useGetCurrentUserAdvtQuery();
+    const [refreshToken] = useRefreshTokenMutation();
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+            await refreshToken();
+            await getCurrentUser();
+        };
+        fetchUserData();
+    }, []);
+
+    useEffect(() => {
+        if (currentUser) {
+            getCurrentUserAdvt();
+        }
+    }, [currentUser]);
 
     return (
         <>
@@ -78,7 +101,7 @@ const MainNotReg = () => {
                                         </NavLink>
                                     </MenuForm>
                                 </MainMenu>
-                                <MainH2>Здравствуйте, Антон!</MainH2>
+                                <MainH2>Здравствуйте, {currentUser?.name}!</MainH2>
                                 <MainProfile>
                                     <ProfileContent>
                                         <ProfileTitle>Настройки профиля</ProfileTitle>
@@ -118,42 +141,17 @@ const MainNotReg = () => {
 
                             <MainContent>
                                 <ContentCards>
-                                    <CardsItem title="Ракетка для большого тенниса Triumph Pro ST"
-                                        price="2&nbsp;200&nbsp;₽"
-                                        place="Санкт Петербург"
-                                        date="Сегодня в&nbsp;10:45"
-                                        article
-                                    />
-                                    <CardsItem title="Ракетка для большого тенниса Triumph Pro ST"
-                                        price="2&nbsp;200&nbsp;₽"
-                                        place="Санкт Петербург"
-                                        date="Сегодня в&nbsp;10:45"
-                                        article
-                                    />
-                                    <CardsItem title="Ракетка для большого тенниса Triumph Pro ST"
-                                        price="2&nbsp;200&nbsp;₽"
-                                        place="Санкт Петербург"
-                                        date="Сегодня в&nbsp;10:45"
-                                        article
-                                    />
-                                    <CardsItem title="Ракетка для большого тенниса Triumph Pro ST"
-                                        price="2&nbsp;200&nbsp;₽"
-                                        place="Санкт Петербург"
-                                        date="Сегодня в&nbsp;10:45"
-                                        article
-                                    />
-                                    <CardsItem title="Ракетка для большого тенниса Triumph Pro ST"
-                                        price="2&nbsp;200&nbsp;₽"
-                                        place="Санкт Петербург"
-                                        date="Сегодня в&nbsp;10:45"
-                                        article
-                                    />
-                                    <CardsItem title="Ракетка для большого тенниса Triumph Pro ST"
-                                        price="2&nbsp;200&nbsp;₽"
-                                        place="Санкт Петербург"
-                                        date="Сегодня в&nbsp;10:45"
-                                        article
-                                    />
+                                    {/* {getCurrentUserAdvt?.data.map((item) => (
+                                        <CardsItemRender
+                                            key={item?.id}
+                                            id={item.id}
+                                            title={item.title}
+                                            price={item.price}
+                                            place={item.user.city}
+                                            date={item.created_on.split("T")[0]}
+                                            picture={`http://localhost:8090/${item.images[0]?.url}`}
+                                        />
+                                    ))} */}
                                 </ContentCards>
                             </MainContent>
                         </MainContainer>
@@ -165,4 +163,4 @@ const MainNotReg = () => {
     );
 };
 
-export default MainNotReg;
+export default Profile;

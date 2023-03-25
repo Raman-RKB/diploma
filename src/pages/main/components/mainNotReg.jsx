@@ -42,7 +42,7 @@ const MainNotReg = () => {
 
     const SearchProducts = async (data, keyword) => {
         const regex = new RegExp(keyword, 'i');
-        const results = data.filter(product => regex.test(product.title) || regex.test(product.description));
+        const results = data.filter(product => regex.test(product?.title) || regex.test(product?.description));
         setSearchResults(results);
     }
 

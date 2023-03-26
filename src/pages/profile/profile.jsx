@@ -9,8 +9,10 @@ import { NavLink } from "react-router-dom";
 import { Wrapper, GlobalStyle } from './style/globalStyle';
 import { useGetCurrentUserMutation } from '../../services/servises';
 import { useRefreshTokenMutation } from '../../services/servises';
-import { useGetCurrentUserAdvtQuery } from '../../services/servises';
-import React, { useEffect } from 'react';
+import { useEditUserDataMutation } from '../../services/servises';
+import { useUploadUserAvatarMutation } from '../../services/servises';
+// import { useGetCurrentUserAdvtQuery } from '../../services/servises';
+import React, { useState, useEffect } from 'react';
 
 import {
     Container,
@@ -49,10 +51,35 @@ import {
 } from './style/profileStyle';
 
 const Profile = () => {
-    
+    const [name, setName] = useState('');
+    const [surname, setSurname] = useState('');
+    const [city, setCity] = useState('');
+    const [phone, setPhone] = useState('');
+
     const [getCurrentUser, { data: currentUser }] = useGetCurrentUserMutation();
-    const [getCurrentUserAdvt] = useGetCurrentUserAdvtQuery();
+    const [editUserData] = useEditUserDataMutation();
+    const [uploadUserAvatar] = useUploadUserAvatarMutation();
+    // const [getCurrentUserAdvt] = useGetCurrentUserAdvtQuery();
     const [refreshToken] = useRefreshTokenMutation();
+
+    const handleSaveChanges = (event) => {
+        event.preventDefault();
+        const userData = { phone, name, surname, city };
+        editUserData(userData);
+    };
+
+    const handleAvatarUpload = (event) => {
+        const selectedFile = event.target.files[0];
+        if (!selectedFile) {
+            console.log('Файл не выбран');
+        } else {
+            const formData = new FormData();
+            formData.append('avatar', selectedFile);
+            uploadUserAvatar(formData)
+
+        };
+    }
+
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -62,11 +89,21 @@ const Profile = () => {
         fetchUserData();
     }, []);
 
-    useEffect(() => {
-        if (currentUser) {
-            getCurrentUserAdvt();
-        }
-    }, [currentUser]);
+    const handleNameChange = (event) => {
+        setName(event.target.value);
+    };
+
+    const handleSurnameChange = (event) => {
+        setSurname(event.target.value);
+    };
+
+    const handleCityChange = (event) => {
+        setCity(event.target.value);
+    }
+
+    const handlePhoneChange = (event) => {
+        setPhone(event.target.value);
+    }
 
     return (
         <>
@@ -110,27 +147,27 @@ const Profile = () => {
                                                 <SettingsImgContainer>
                                                     <SettingsImg />
                                                 </SettingsImgContainer>
-                                                <SettingsChangePhoto>Заменить</SettingsChangePhoto>
+                                                <SettingsChangePhoto type="file" onClick={handleAvatarUpload}></SettingsChangePhoto>
                                             </SettingsLeft>
                                             <SettingsRight>
                                                 <SettingsForm>
                                                     <SettingsDiv>
                                                         <SettingsFormLabel for="settings-fname">Имя</SettingsFormLabel>
-                                                        <SettingsFormInput id="settings-fname" name="fname" type="text" />
+                                                        <SettingsFormInput onChange={handleNameChange} id="settings-fname" name="fname" type="text" />
                                                     </SettingsDiv>
                                                     <SettingsDiv>
                                                         <SettingsFormLabel for="lname">Фамилия</SettingsFormLabel>
-                                                        <SettingsFormInput id="settings-lname" name="lname" type="text" />
+                                                        <SettingsFormInput onChange={handleSurnameChange} id="settings-lname" name="lname" type="text" />
                                                     </SettingsDiv>
                                                     <SettingsDiv>
                                                         <SettingsFormLabel for="city">Город</SettingsFormLabel>
-                                                        <SettingsFormInput id="settings-city" name="city" type="text" />
+                                                        <SettingsFormInput onChange={handleCityChange} id="settings-city" name="city" type="text" />
                                                     </SettingsDiv>
                                                     <SettingsDiv>
                                                         <SettingsFormLabel for="phone">Телефон</SettingsFormLabel>
-                                                        <SettingsPhoneInput id="settings-phone" name="phone" type="tel" />
+                                                        <SettingsPhoneInput onChange={handlePhoneChange} id="settings-phone" name="phone" type="tel" />
                                                     </SettingsDiv>
-                                                    <SettingsBtn id="settings-btn">Сохранить</SettingsBtn>
+                                                    <SettingsBtn onClick={handleSaveChanges} id="settings-btn">Сохранить</SettingsBtn>
                                                 </SettingsForm>
                                             </SettingsRight>
                                         </ProfileSettings>

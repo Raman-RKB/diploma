@@ -280,13 +280,15 @@ export const SettingsImg = styled.img`
     object-fit: cover;
 `;
 
-export const SettingsChangePhoto = styled.div`
+export const SettingsChangePhoto = styled.input`
   margin-top: 10px;
   margin-bottom: 30px;
   text-decoration: none;
   font-size: 16px;
   line-height: 24px;
   color: #009EE4;
+  cursor: pointer;
+  
 `;
 
 export const SettingsRight = styled.div`

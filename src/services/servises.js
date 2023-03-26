@@ -15,10 +15,6 @@ export const advtApi = createApi({
 
   endpoints: (builder) => ({
 
-    getCurrentUserAdvt: builder.query({
-      query: () => "ads/me"
-    }),
-
     getAlladvt: builder.query({
       query: () => "ads"
     }),
@@ -79,7 +75,31 @@ export const advtApi = createApi({
         localStorage.setItem("refresh_token", response.refresh_token);
         return response;
       },
-    })
+    }),
+
+    getCurrentUserAdvt: builder.query({
+      query: () => "user/ads"
+    }),
+
+
+    editUserData: builder.mutation({
+      query: (userData) => ({
+        url: 'user',
+        method: 'PATCH',
+        body: userData
+      })
+    }),
+
+    uploadUserAvatar: builder.mutation({
+      query: (formData) => ({
+        url: 'user/avatar',
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Content-Type': `multipart/form-data; boundary=${formData._boundary}`
+        }
+      })
+    }),
 
   })
 });
@@ -91,5 +111,7 @@ export const {
   useLoginUserMutation,
   useGetCurrentUserMutation,
   useRefreshTokenMutation,
-  useGetCurrentUserAdvtQuery
+  useGetCurrentUserAdvtQuery,
+  useEditUserDataMutation,
+  useUploadUserAvatarMutation
 } = advtApi;

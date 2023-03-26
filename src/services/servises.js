@@ -95,10 +95,11 @@ export const advtApi = createApi({
         url: 'user/avatar',
         method: 'POST',
         body: formData,
-        headers: {
-          'Content-Type': `multipart/form-data; boundary=${formData._boundary}`
-        }
-      })
+      }),
+      transformResponse: (response) => {
+        localStorage.setItem("avatar", response.access_token);
+        return response;
+      },
     }),
 
   })

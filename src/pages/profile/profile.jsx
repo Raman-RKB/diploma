@@ -3,7 +3,7 @@
 import Logo from './img/logo.png';
 import LogoMob from './img/logo-mob.png';
 import FooterAll from '../modal/footer';
-// import CardsItemRender from '../modal/cardsitem';
+import CardsItemRender from '../modal/cardsitem';
 
 import { NavLink } from "react-router-dom";
 import { Wrapper, GlobalStyle } from './style/globalStyle';
@@ -11,7 +11,7 @@ import { useGetCurrentUserMutation } from '../../services/servises';
 import { useRefreshTokenMutation } from '../../services/servises';
 import { useEditUserDataMutation } from '../../services/servises';
 import { useUploadUserAvatarMutation } from '../../services/servises';
-// import { useGetCurrentUserAdvtQuery } from '../../services/servises';
+import { useGetCurrentUserAdvtQuery } from '../../services/servises';
 import React, { useState, useEffect } from 'react';
 
 import {
@@ -59,7 +59,7 @@ const Profile = () => {
     const [getCurrentUser, { data: currentUser }] = useGetCurrentUserMutation();
     const [editUserData] = useEditUserDataMutation();
     const [uploadUserAvatar] = useUploadUserAvatarMutation();
-    // const [getCurrentUserAdvt] = useGetCurrentUserAdvtQuery();
+    const { data } = useGetCurrentUserAdvtQuery();
     const [refreshToken] = useRefreshTokenMutation();
 
     const handleSaveChanges = (event) => {
@@ -69,12 +69,13 @@ const Profile = () => {
     };
 
     const handleAvatarUpload = (event) => {
+        console.log(currentUser.avatar)
         const selectedFile = event.target.files[0];
         if (!selectedFile) {
             console.log('Файл не выбран');
         } else {
             const formData = new FormData();
-            formData.append('avatar', selectedFile);
+            formData.append('file', selectedFile);
             uploadUserAvatar(formData)
 
         };
@@ -145,9 +146,10 @@ const Profile = () => {
                                         <ProfileSettings>
                                             <SettingsLeft>
                                                 <SettingsImgContainer>
-                                                    <SettingsImg />
+                                                    {/* <SettingsImg src={`http://localhost:8090/${currentUser.avatar}`} /> */}
+                                                    <SettingsImg/>
                                                 </SettingsImgContainer>
-                                                <SettingsChangePhoto type="file" onClick={handleAvatarUpload}></SettingsChangePhoto>
+                                                <SettingsChangePhoto type="file" onChange={handleAvatarUpload}></SettingsChangePhoto>
                                             </SettingsLeft>
                                             <SettingsRight>
                                                 <SettingsForm>
@@ -178,7 +180,7 @@ const Profile = () => {
 
                             <MainContent>
                                 <ContentCards>
-                                    {/* {getCurrentUserAdvt?.data.map((item) => (
+                                    {data?.map((item) => (
                                         <CardsItemRender
                                             key={item?.id}
                                             id={item.id}
@@ -188,7 +190,7 @@ const Profile = () => {
                                             date={item.created_on.split("T")[0]}
                                             picture={`http://localhost:8090/${item.images[0]?.url}`}
                                         />
-                                    ))} */}
+                                    ))}
                                 </ContentCards>
                             </MainContent>
                         </MainContainer>

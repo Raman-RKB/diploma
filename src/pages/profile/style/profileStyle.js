@@ -273,14 +273,20 @@ export const SettingsImgContainer = styled.div`
 `;
 
 export const SettingsImg = styled.img`
-    width: 100%;
-    height: auto;
-    display: block;
-    -o-object-fit: cover;
-    object-fit: cover;
+  width: 100%;
+  height: 100%;
+  display: block;
+  -o-object-fit: cover;
+  object-fit: cover;
+  border-radius: 50%;
 `;
 
-export const SettingsChangePhoto = styled.input`
+
+export const SettingsChangePhotoLable = styled.label`
+  
+`;
+
+export const SettingsChangePhotoButton = styled.div`
   margin-top: 10px;
   margin-bottom: 30px;
   text-decoration: none;
@@ -288,7 +294,13 @@ export const SettingsChangePhoto = styled.input`
   line-height: 24px;
   color: #009EE4;
   cursor: pointer;
-  
+`;
+
+export const SettingsChangePhoto = styled.input`
+  opacity: 0;
+  position: absolute;
+  top: -9999px;
+  left: -9999px;  
 `;
 
 export const SettingsRight = styled.div`

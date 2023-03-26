@@ -1,9 +1,6 @@
-// import React, { useContext, useState, useEffect } from 'react';
-
-// import Logo from '../img/logo.png';
-
 import { Wrapper, GlobalStyle } from './style/globalStyle';
-// import { NavLink } from "react-router-dom";
+import { useUploaNewADVTMutation } from '../../services/servises';
+import React, { useState } from 'react';
 
 import {
     ContainerBg,
@@ -30,6 +27,43 @@ import {
 } from './style/newADVTStyle';
 
 const MainNotReg = () => {
+    const [title, setTitle] = useState('');
+    const [description, setDescription] = useState('');
+    const [price, setPrice] = useState('');
+    const [images, setImages] = useState('');
+    const [uploaNewADVT] = useUploaNewADVTMutation();
+
+    const handleUploaNewADVT = () => {
+        const formData = new FormData();
+        formData.append('images', images);
+        formData.append('title', title);
+        formData.append('description', description);
+        formData.append('price', price);
+        console.log(formData)
+        uploaNewADVT(formData);
+    };
+
+
+    const handleProductPictureUpload = (event) => {
+        const selectedFile = event.target.files[0];
+        if (!selectedFile) {
+            console.log('Файл не выбран');
+        } else {
+            setImages(selectedFile);
+        };
+    };
+
+    const handleTitleChange = (event) => {
+        setTitle(event.target.value);
+    };
+
+    const handleDescriptionChange = (event) => {
+        setDescription(event.target.value);
+    };
+
+    const handlePriceChange = (event) => {
+        setPrice(event.target.value);
+    };
 
     return (
         <>
@@ -45,45 +79,29 @@ const MainNotReg = () => {
                             <ModalFormNewArt>
                                 <FormNewArtBlock>
                                     <FormNewArtLabel for="name">Название</FormNewArtLabel>
-                                    <FormNewArtInput type="text" name="name" id="formName"
+                                    <FormNewArtInput onChange={handleTitleChange} type="text" name="name" id="formName"
                                         placeholder="Введите название" />
                                 </FormNewArtBlock>
                                 <FormNewArtBlock>
-                                    <FormNewArtLabel for="text">Описание</FormNewArtLabel>
+                                    <FormNewArtLabel onChange={handleDescriptionChange} for="text">Описание</FormNewArtLabel>
                                     <FormNewArtArea name="text" id="formArea" cols="auto" rows="10"
                                         placeholder="Введите описание"></FormNewArtArea>
                                 </FormNewArtBlock>
                                 <FormNewArtBlock>
-                                    <FormNewArtP>Фотографии товара<FormNewArtPSpan>не более 5 фотографий</FormNewArtPSpan></FormNewArtP>
+                                    <FormNewArtP >Фотографии товара<FormNewArtPSpan>не более 5 фотографий</FormNewArtPSpan></FormNewArtP>
                                     <FormNewArtBarImg>
                                         <FormNewArtImgContainer>
                                             <FormNewArtImg />
-                                            <FormNewArtImgCover></FormNewArtImgCover>
-                                        </FormNewArtImgContainer>
-                                        <FormNewArtImgContainer>
-                                            <FormNewArtImg />
-                                            <FormNewArtImgCover></FormNewArtImgCover>
-                                        </FormNewArtImgContainer>
-                                        <FormNewArtImgContainer>
-                                            <FormNewArtImg />
-                                            <FormNewArtImgCover></FormNewArtImgCover>
-                                        </FormNewArtImgContainer>
-                                        <FormNewArtImgContainer>
-                                            <FormNewArtImg />
-                                            <FormNewArtImgCover></FormNewArtImgCover>
-                                        </FormNewArtImgContainer>
-                                        <FormNewArtImgContainer>
-                                            <FormNewArtImg />
-                                            <FormNewArtImgCover></FormNewArtImgCover>
+                                            <FormNewArtImgCover onChange={handleProductPictureUpload} type="file"></FormNewArtImgCover>
                                         </FormNewArtImgContainer>
                                     </FormNewArtBarImg>
                                 </FormNewArtBlock>
                                 <FormNewArtBlockPrice>
-                                    <FormNewArtLabel for="price">Цена</FormNewArtLabel>
+                                    <FormNewArtLabel onChange={handlePriceChange} for="price">Цена</FormNewArtLabel>
                                     <FormNewArtInputPrice type="text" name="price" id="formName"></FormNewArtInputPrice>
                                     <FormNewArtInputPriceCover></FormNewArtInputPriceCover>
                                 </FormNewArtBlockPrice>
-                                <FormNewArtBtnPub id="btnPublish">Опубликовать</FormNewArtBtnPub>
+                                <FormNewArtBtnPub onClick={handleUploaNewADVT} id="btnPublish">Опубликовать</FormNewArtBtnPub>
                             </ModalFormNewArt>
                         </ModalContent>
                     </ModalBlock>

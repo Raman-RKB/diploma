@@ -48,6 +48,8 @@ import {
     SettingsImgContainer,
     SettingsImg,
     ContentCards,
+    SettingsChangePhotoLable,
+    SettingsChangePhotoButton
 } from './style/profileStyle';
 
 const Profile = () => {
@@ -62,14 +64,20 @@ const Profile = () => {
     const { data } = useGetCurrentUserAdvtQuery();
     const [refreshToken] = useRefreshTokenMutation();
 
-    const handleSaveChanges = (event) => {
+    const handleSaveChanges = async (event) => {
         event.preventDefault();
+        await refreshToken();
         const userData = { phone, name, surname, city };
         editUserData(userData);
     };
 
+    const handleAvatarClick = (event) => {
+        event.preventDefault();
+        const fileUpload = document.getElementById('file-upload');
+        fileUpload.click();
+    }
+
     const handleAvatarUpload = (event) => {
-        console.log(currentUser.avatar)
         const selectedFile = event.target.files[0];
         if (!selectedFile) {
             console.log('Файл не выбран');
@@ -146,10 +154,12 @@ const Profile = () => {
                                         <ProfileSettings>
                                             <SettingsLeft>
                                                 <SettingsImgContainer>
-                                                    {/* <SettingsImg src={`http://localhost:8090/${currentUser.avatar}`} /> */}
-                                                    <SettingsImg/>
-                                                </SettingsImgContainer>
-                                                <SettingsChangePhoto type="file" onChange={handleAvatarUpload}></SettingsChangePhoto>
+                                                    <SettingsImg src={`http://localhost:8090/${currentUser?.avatar}`} />
+                                                </SettingsImgContainer >
+                                                <SettingsChangePhotoLable for="file-upload">
+                                                    <SettingsChangePhotoButton onClick={handleAvatarClick}>Загрузить</SettingsChangePhotoButton>
+                                                </SettingsChangePhotoLable>
+                                                <SettingsChangePhoto id="file-upload" type="file" onChange={handleAvatarUpload}></SettingsChangePhoto>
                                             </SettingsLeft>
                                             <SettingsRight>
                                                 <SettingsForm>

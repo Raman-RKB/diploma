@@ -352,7 +352,7 @@ export const FormNewArtImg = styled.img`
   }
 `;
 
-export const FormNewArtImgCover = styled.div`
+export const FormNewArtImgCover = styled.input`
   position: absolute;
   width: 100%;
   height: 100%;

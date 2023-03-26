@@ -102,6 +102,26 @@ export const advtApi = createApi({
       },
     }),
 
+    uploaNewADVT: builder.mutation({
+      query: (params) => {
+        const formData = new FormData();
+        formData.append('images', params.images);
+        const queryParams = new URLSearchParams({
+          title: params.title,
+          description: params.description,
+          price: params.price,
+        });
+        return {
+          url: `ads?${queryParams}`,
+          method: 'POST',
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+          body: formData,
+        };
+      },
+    }),
+
   })
 });
 
@@ -114,5 +134,6 @@ export const {
   useRefreshTokenMutation,
   useGetCurrentUserAdvtQuery,
   useEditUserDataMutation,
-  useUploadUserAvatarMutation
+  useUploadUserAvatarMutation,
+  useUploaNewADVTMutation
 } = advtApi;

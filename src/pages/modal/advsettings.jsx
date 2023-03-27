@@ -33,35 +33,29 @@ import {
     AdvtImg
 } from './style/newADVTStyle';
 
-const MainNotReg = () => {
+const AdvSettings = () => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [price, setPrice] = useState();
-    const [images, setImages] = useState([]);
+    const [image, setImage] = useState([]);
     const [inputAndAvaFilled, setInputAndAvaFilled] = useState();
     const [saveButtonActive, setSaveButtonActive] = useState(false);
 
     const [refreshToken] = useRefreshTokenMutation();
     let { id } = useParams();
-    console.log(id)
     const { data: advtData } = useGetAdvtByIdQuery(id);
     const [editAdvtData] = useEditAdvtDataMutation(id);
 
-    console.log(advtData)
-
     const handleUploaNewADVT = async (event) => {
         event.preventDefault();
-        await refreshToken()
 
-        const formData = new FormData();
-        formData.append('title', title);
-        formData.append('description', description);
-        formData.append('price', price);
-        formData.append('pk', id);
+        await refreshToken()
+        let images = image[0]
+        const userData = { title, description, price, id, images:[images]  };
         // images.forEach((image, index) => {
-        //     formData.append(`image${index + 1}`, image);
+        //     userData.push(`image${index + 1}`, image);
         // });
-        editAdvtData(formData)
+        editAdvtData(userData)
     };
 
     const handlePhotoClick = (event) => {
@@ -87,7 +81,7 @@ const MainNotReg = () => {
     };
 
     const handleAddItemPhoto = (newItem) => {
-        setImages((prevItems) => prevItems.concat(newItem));
+        setImage((prevItems) => prevItems.concat(newItem));
     };
 
     const handleTitleChange = (event) => {
@@ -108,8 +102,8 @@ const MainNotReg = () => {
     };
 
     useEffect(() => {
-        return
-    }, [images]);
+        console.log(image)
+    }, [image]);
 
     useEffect(() => {
         const inputs = document.querySelectorAll('input, textarea');
@@ -253,4 +247,4 @@ const MainNotReg = () => {
     );
 };
 
-export default MainNotReg;
+export default AdvSettings;

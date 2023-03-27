@@ -139,23 +139,12 @@ export const advtApi = createApi({
     }),
 
     editAdvtData: builder.mutation({
-      query: (userData) => {
-        const searchParams = new URLSearchParams();
-        searchParams.append('pk', userData.get('pk'));
-
-        const formData = new FormData();
-        formData.append('title', userData.get('title'));
-        formData.append('description', userData.get('description'));
-        formData.append('price', userData.get('price'));
-
-        return {
-          url: `ads/${userData.get('pk')}`,
-          method: 'PATCH',
-          body: formData,
-        };
-      },
+      query: (formData) => ({
+        url: `ads/${formData.id}`,
+        method: 'PATCH',
+        body: formData,
+      }),
     })
-
 
   })
 });

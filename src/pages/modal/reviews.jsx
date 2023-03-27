@@ -37,7 +37,7 @@ const MainNotReg = () => {
         textArea.value = '';
         await refreshToken();
         await setComment({ id, text });
-        data.refetch(); // trigger a new request to fetch the latest comments
+        data.refetch();
         console.log(data);
     };
 

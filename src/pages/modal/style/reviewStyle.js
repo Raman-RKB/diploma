@@ -494,15 +494,15 @@ export const FormNewArtArea = styled.textarea`
 export const FormNewArtBtnPub = styled.button`
   width: 181px;
   height: 50px;
-  background: #D9D9D9;
-  border: 1px solid #D9D9D9;
+  background: ${props => props.active};
+  border: 1px solid ${props => props.active};
   border-radius: 6px;
   font-size: 16px;
   line-height: 24px;
   color: #FFFFFF;
 
   &:hover {
-  background-color: #0080C1;
+  background-color: ${props => props.activeHover};
 }
 
   @media screen and (max-width: 600px) {

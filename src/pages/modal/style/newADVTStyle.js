@@ -352,7 +352,7 @@ export const FormNewArtImg = styled.img`
   }
 `;
 
-export const FormNewArtImgCover = styled.input`
+export const FormNewArtImgCover = styled.div`
   position: absolute;
   width: 100%;
   height: 100%;
@@ -360,6 +360,7 @@ export const FormNewArtImgCover = styled.input`
   left: 0;
   background-color: #F0F0F0;
   z-index: -1;
+  
 
   &::after, &::before {
   content: "";
@@ -376,6 +377,24 @@ export const FormNewArtImgCover = styled.input`
   transform: rotate(90deg);
 }
 `;
+
+export const AdvtImg = styled.img`
+ max-width: 100%;
+  position: absolute;
+  z-index: 1;
+`;
+
+export const FormNewArtImgCoverInput = styled.input`
+  opacity: 0;
+  position: absolute;
+  top: -9999px;
+  left: -9999px;  
+`;
+
+export const FormNewArtImgCoverInputLabel = styled.label`
+
+`;
+
 
 export const FormNewArtBlockPrice = styled.div`
   width: 100%;
@@ -483,15 +502,15 @@ export const FormNewArtBtnPub = styled.button`
   margin-top: 10px;
   width: 181px;
   height: 50px;
-  background: #D9D9D9;
-  border: 1px solid #D9D9D9;
+  background: ${props => props.active};
+  border: 1px solid ${props => props.active};
   border-radius: 6px;
   font-size: 16px;
   line-height: 24px;
   color: #FFFFFF;
 
   &:hover {
-  background-color: #0080C1;
+  background-color: ${props => props.activeHover};
 }
 
   @media screen and (max-width: 600px) {

@@ -447,9 +447,13 @@ export const SettingsBtn = styled.button`
   width: 154px;
   height: 50px;
   margin: 10px 7px 0;
-  background-color: #009EE4;
+  background-color: ${props => props.active};
   border-radius: 6px;
-  border: 1px solid #009EE4;
+  border: 1px solid ${props => props.active};
+
+  &:hover {
+  background-color: ${props => props.activeHover};
+  }
 
   @media screen and (max-width: 620px) {
     font-size: 16px;
@@ -457,11 +461,6 @@ export const SettingsBtn = styled.button`
     width: 100%;
     height: 46px;
     margin: 8px 0px 0;
-    }
-
-    &:hover {
-  background-color: #0080C1;
-  }
 `;
 
 

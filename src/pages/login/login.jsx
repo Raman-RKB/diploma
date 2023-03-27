@@ -5,7 +5,6 @@ import FooterAll from '../modal/footer';
 import { useLoginUserMutation } from '../../services/servises';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
-import { AppRoutes } from '../../AppRoutes';
 
 import {
     ContainerEnter,
@@ -22,7 +21,6 @@ import {
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [user, setUser] = useState(false);
     const [loginUser, { data }] = useLoginUserMutation();
 
     const navigate = useNavigate();
@@ -32,16 +30,15 @@ const Login = () => {
         const userData = { email, password };
         loginUser(userData);
     }
-
+    //-----------------------------------------------------------------
     useEffect(() => {
         if (data) {
-            setUser(true)
             navigate("/profile", { replace: true });
         } else {
-
             console.log('ошибки!!!');
         }
     }, [data, navigate]);
+    //-------------------------------------------------------------
 
     const handleEmailChange = (event) => {
         setEmail(event.target.value);
@@ -86,8 +83,6 @@ const Login = () => {
                     </ModalBlock>
                 </ContainerEnter>
             </Wrapper>
-            <AppRoutes user={user} />
-
         </>
     );
 };

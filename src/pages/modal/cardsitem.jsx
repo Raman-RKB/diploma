@@ -14,18 +14,18 @@ import {
     CardContainer
 } from './style/cardsItemStyle';
 
-const Cardsitem = ({ id, title, price, place, date, article, picture }) => {
+const Cardsitem = ({ id, title, price, place, date, myAdvt, picture }) => {
 
     return (
         <CardsItem>
             <CardsCard>
-                <NavLink to={article ? `/myadvpage` : `/product/${id}`} replace>
+                <NavLink to={myAdvt ? `/product/${myAdvt}/${id}` : `/product/${id}`} replace>
                     <CardImageContainer>
                         <CardImage src={picture} alt="picture" />
                     </CardImageContainer>
                 </NavLink>
                 <CardContainer>
-                    <NavLink to={article ? `/myadvpage` : `/product/${id}`} replace>
+                    <NavLink to={myAdvt ? `/product/${myAdvt}/${id}` : `/product/${id}`} replace>
                         <CardTitle>{title}</CardTitle>
                     </NavLink>
                     <CardPrice>{price}</CardPrice>

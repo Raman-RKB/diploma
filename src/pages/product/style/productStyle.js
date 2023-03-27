@@ -667,7 +667,7 @@ export const MainArtic = styled.div`
 export const ArticContent = styled.div`
   display: flex;
   align-items: top;
-  justify-content: center;
+ 
 
   @media screen and (max-width: 768px) {
     display: flex;
@@ -752,7 +752,7 @@ export const ArticleImgContainer = styled.div`
 
 export const ArticleImg = styled.img`
   width: 100%;
-  height: auto;
+  height: 480px;
   display: block;
   -o-object-fit: cover;
      object-fit: cover;
@@ -807,7 +807,7 @@ export const ArticleImgBarMob = styled.div`
 
   @media screen and (max-width: 768px) {
     display: block;
-    width: 68px;
+    width: ${props => props.containerWidth};
     height: 8px;
     position: absolute;
     bottom: 20px;
@@ -932,6 +932,7 @@ export const ArticleBtn = styled.button`
   line-height: 22px;
   color: #FFFFFF;
   font-family: "Roboto", sans-serif;
+  display: ${props => props.myadvt};
 
   @media screen and (max-width: 890px) {
     width: 100%;
@@ -1042,7 +1043,72 @@ export const MainText = styled.p`
   color: #000000;
 `;
 
+//----------------------BUTTON REDACT/REMOVE--------------------------------
 
 
 
+export const ArticleBtnBlock = styled.div`
+  display: ${props => props.myadvt};
+  flex-wrap: wrap;
+`;
 
+export const ArticleBtnRedact = styled.button`
+  background-color: #009EE4;
+  border-radius: 6px;
+  border: 1px solid #009EE4;
+  height: 50px;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1;
+  color: #FFFFFF;
+  margin-bottom: 10px;
+  width: 189px;
+  margin-right: 10px;
+
+  &:hover {
+  background-color: #0080C1;
+  }
+
+    @media screen and (max-width: 966px) {
+    width: 225px;
+    margin-right: 0;
+    }
+
+  @media screen and (max-width: 768px) {
+    width: 100%;
+    height: 57px;
+    font-size: 14px;
+    line-height: 20px;
+    color: #FFFFFF;
+    }
+`;
+
+export const ArticleBtnRemove = styled.button`
+  background-color: #009EE4;
+  border-radius: 6px;
+  border: 1px solid #009EE4;
+  height: 50px;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1;
+  color: #FFFFFF;
+  margin-bottom: 10px;
+ width: 225px;
+
+  &:hover {
+  background-color: #0080C1;
+  }
+
+    @media screen and (max-width: 966px) {
+      width: 225px;
+    margin-right: 0;
+    }
+
+  @media screen and (max-width: 768px) {
+    width: 100%;
+    height: 57px;
+    font-size: 14px;
+    line-height: 20px;
+    color: #FFFFFF;
+    }
+`;

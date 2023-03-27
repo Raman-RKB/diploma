@@ -9,10 +9,9 @@ import Seller from "./pages/seller/seller";
 import Addnewat from "./pages/modal/newADVT";
 import Reviews from "./pages/modal/reviews";
 import Settings from "./pages/modal/advsettings";
-import Myadvpage from "./pages/Myadvpage/myadvpage";
 import ProtectedRoute from "./pages/ProtectedRoute/ProtectedRoute";
 
-export const AppRoutes = ({ user }) => {
+export const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<MainScreen />} />
@@ -21,12 +20,11 @@ export const AppRoutes = ({ user }) => {
       <Route path="/product/:id" element={<Product />} />
       <Route path="/seller/:id" element={<Seller />} />
       <Route path="/reviews/:id" element={<Reviews />} />
-
-      <Route element={<ProtectedRoute isAllowed={Boolean({ user })} />}>
+      <Route element={<ProtectedRoute />}>
         <Route path="/profile" element={<Profile />} />
+        <Route path="/settings/:id" element={<Settings />} />
+        <Route path="/product/:myadvt/:id" element={<Product />} />
         <Route path="/addnewat" element={<Addnewat />} />
-        <Route path="/settings" element={<Settings />} />
-        <Route path="/myadvpage" element={<Myadvpage />} />
       </Route>
     </Routes>
   );

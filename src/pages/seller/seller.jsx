@@ -2,7 +2,7 @@
 import Logo from './img/logo.png';
 import LogoMob from './img/logo-mob.png';
 import FooterAll from '../modal/footer';
-import CardsItemRender from './components/cardItem';
+import CardsItem from '../modal/cardsitem';
 import { useParams } from "react-router-dom";
 
 import { NavLink } from "react-router-dom";
@@ -53,8 +53,6 @@ const MainNotReg = () => {
     const [showPhone, setShowPhone] = useState(false);
     const [sellerAdvs, setSellerAdvs] = useState([]);
 
-    console.log(sellerAdvs, 'sellerAdvs')
-
     const showPhoneClick = () => {
         setShowPhone(true)
     };
@@ -91,8 +89,12 @@ const MainNotReg = () => {
                                     <LogoMobImg src={LogoMob} />
                                 </NavLink>
                             </HeaderLogo>
-                            <HeaderBtnMainEnter>Разместить объявление</HeaderBtnMainEnter>
-                            <HeaderBtnLk>Личный кабинет</HeaderBtnLk>
+                            <NavLink to={`/addnewat`} replace>
+                                <HeaderBtnMainEnter>Разместить объявление</HeaderBtnMainEnter>
+                            </NavLink>
+                            <NavLink to={`/profile`} replace>
+                                <HeaderBtnLk>Личный кабинет</HeaderBtnLk>
+                            </NavLink>
                         </HeaderNav>
                     </Header>
                     <main>
@@ -143,7 +145,7 @@ const MainNotReg = () => {
                             <MainContent>
                                 <Cards>
                                     {sellerAdvs?.map((item) => (
-                                        <CardsItemRender
+                                        <CardsItem
                                             key={item?.id}
                                             id={item.id}
                                             title={item.title}

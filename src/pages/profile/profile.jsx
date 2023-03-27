@@ -3,7 +3,7 @@
 import Logo from './img/logo.png';
 import LogoMob from './img/logo-mob.png';
 import FooterAll from '../modal/footer';
-import CardsItemRender from '../modal/cardsitem';
+import CardsItem from '../modal/cardsitem';
 
 import { NavLink } from "react-router-dom";
 import { Wrapper, GlobalStyle } from './style/globalStyle';
@@ -57,6 +57,9 @@ const Profile = () => {
     const [surname, setSurname] = useState('');
     const [city, setCity] = useState('');
     const [phone, setPhone] = useState('');
+    const [inputAndAvaFilled, setInputAndAvaFilled] = useState();
+    const [saveButtonActive, setSaveButtonActive] = useState(false);
+    const [actualUserData, setActualUserData] = useState('');
 
     const [getCurrentUser, { data: currentUser }] = useGetCurrentUserMutation();
     const [editUserData] = useEditUserDataMutation();
@@ -66,29 +69,44 @@ const Profile = () => {
 
     const handleSaveChanges = async (event) => {
         event.preventDefault();
+        const inputs = document.querySelectorAll('input[type="text"], input[type="tel"]');
+
         await refreshToken();
         const userData = { phone, name, surname, city };
         editUserData(userData);
+        setSaveButtonActive(false)
+        getCurrentUser()
+        setActualUserData(currentUser)
+        setActualUserData(`http://localhost:8090/${currentUser}`)
+        inputs.forEach((input) => {
+            input.value = '';
+        });
     };
 
     const handleAvatarClick = (event) => {
         event.preventDefault();
         const fileUpload = document.getElementById('file-upload');
         fileUpload.click();
+        fileUpload.addEventListener('change', () => {
+            if (fileUpload.files && fileUpload.files[0]) {
+                setSaveButtonActive(true);
+            }
+        });
     }
 
     const handleAvatarUpload = (event) => {
+        event.preventDefault();
         const selectedFile = event.target.files[0];
         if (!selectedFile) {
             console.log('Файл не выбран');
         } else {
             const formData = new FormData();
             formData.append('file', selectedFile);
+            setInputAndAvaFilled(true)
             uploadUserAvatar(formData)
 
         };
     }
-
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -100,19 +118,43 @@ const Profile = () => {
 
     const handleNameChange = (event) => {
         setName(event.target.value);
+        setInputAndAvaFilled(event.target.value)
     };
 
     const handleSurnameChange = (event) => {
         setSurname(event.target.value);
+        setInputAndAvaFilled(event.target.value)
     };
 
     const handleCityChange = (event) => {
         setCity(event.target.value);
+        setInputAndAvaFilled(event.target.value)
     }
 
     const handlePhoneChange = (event) => {
         setPhone(event.target.value);
+        setInputAndAvaFilled(event.target.value)
     }
+
+    useEffect(() => {
+        const inputs = document.querySelectorAll('input');
+        let allAreEmpty = true;
+        inputs.forEach(input => {
+            if (input.value.trim() !== '') {
+                allAreEmpty = false;
+            }
+        });
+
+        if (allAreEmpty) {
+            setSaveButtonActive(false)
+        } else {
+            setSaveButtonActive(true)
+        }
+    }, [inputAndAvaFilled]);
+
+    useEffect(() => {
+        setActualUserData(currentUser)
+    }, [currentUser]);
 
     return (
         <>
@@ -147,19 +189,26 @@ const Profile = () => {
                                         </NavLink>
                                     </MenuForm>
                                 </MainMenu>
-                                <MainH2>Здравствуйте, {currentUser?.name}!</MainH2>
+                                <MainH2>Здравствуйте, {actualUserData?.name}!</MainH2>
                                 <MainProfile>
                                     <ProfileContent>
                                         <ProfileTitle>Настройки профиля</ProfileTitle>
                                         <ProfileSettings>
                                             <SettingsLeft>
                                                 <SettingsImgContainer>
-                                                    <SettingsImg src={`http://localhost:8090/${currentUser?.avatar}`} />
+                                                    <SettingsImg src={`http://localhost:8090/${actualUserData?.avatar}`} />
                                                 </SettingsImgContainer >
                                                 <SettingsChangePhotoLable for="file-upload">
-                                                    <SettingsChangePhotoButton onClick={handleAvatarClick}>Загрузить</SettingsChangePhotoButton>
+                                                    <SettingsChangePhotoButton
+                                                        onClick={handleAvatarClick}>
+                                                        Загрузить
+                                                    </SettingsChangePhotoButton>
                                                 </SettingsChangePhotoLable>
-                                                <SettingsChangePhoto id="file-upload" type="file" onChange={handleAvatarUpload}></SettingsChangePhoto>
+                                                <SettingsChangePhoto
+                                                    id="file-upload"
+                                                    type="file"
+                                                    onChange={handleAvatarUpload}
+                                                />
                                             </SettingsLeft>
                                             <SettingsRight>
                                                 <SettingsForm>
@@ -179,7 +228,13 @@ const Profile = () => {
                                                         <SettingsFormLabel for="phone">Телефон</SettingsFormLabel>
                                                         <SettingsPhoneInput onChange={handlePhoneChange} id="settings-phone" name="phone" type="tel" />
                                                     </SettingsDiv>
-                                                    <SettingsBtn onClick={handleSaveChanges} id="settings-btn">Сохранить</SettingsBtn>
+                                                    <SettingsBtn
+                                                        active={!saveButtonActive ? '#D9D9D9' : '#009EE4'}
+                                                        activeHover={!saveButtonActive ? '#D9D9D9' : '#0080C1'}
+                                                        onClick={handleSaveChanges}
+                                                        id="settings-btn">
+                                                        Сохранить
+                                                    </SettingsBtn>
                                                 </SettingsForm>
                                             </SettingsRight>
                                         </ProfileSettings>
@@ -190,14 +245,15 @@ const Profile = () => {
 
                             <MainContent>
                                 <ContentCards>
-                                    {data?.map((item) => (
-                                        <CardsItemRender
+                                    {data && data?.map((item) => (
+                                        <CardsItem
                                             key={item?.id}
-                                            id={item.id}
-                                            title={item.title}
-                                            price={item.price}
-                                            place={item.user.city}
-                                            date={item.created_on.split("T")[0]}
+                                            myAdvt='myAdvt'
+                                            id={item?.id}
+                                            title={item?.title}
+                                            price={item?.price}
+                                            place={currentUser?.city}
+                                            date={item.created_on?.split("T")[0]}
                                             picture={`http://localhost:8090/${item.images[0]?.url}`}
                                         />
                                     ))}

@@ -78,9 +78,8 @@ export const advtApi = createApi({
     }),
 
     getCurrentUserAdvt: builder.query({
-      query: () => "user/ads"
+      query: () => "ads/me"
     }),
-
 
     editUserData: builder.mutation({
       query: (userData) => ({
@@ -103,24 +102,60 @@ export const advtApi = createApi({
     }),
 
     uploaNewADVT: builder.mutation({
-      query: (params) => {
+      query: (data) => {
+        const searchParams = new URLSearchParams();
+        searchParams.append('title', data.get('title'));
+        searchParams.append('description', data.get('description'));
+        searchParams.append('price', data.get('price'));
+
         const formData = new FormData();
-        formData.append('images', params.images);
-        const queryParams = new URLSearchParams({
-          title: params.title,
-          description: params.description,
-          price: params.price,
-        });
+
+        const arrData = [...data];
+        const length = arrData.length;
+
+        for (let i = 1; i < length - 2; i++) {
+          formData.append('files', data.get(`image${i}`));
+        }
+
         return {
-          url: `ads?${queryParams}`,
+          url: `ads?${searchParams.toString()}`,
           method: 'POST',
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
           body: formData,
         };
       },
     }),
+
+
+    setComment: builder.mutation({
+      query: ({ id, text }) => ({
+        url: `ads/${id}/comments`,
+        method: 'POST',
+        body: { text },
+      }),
+    }),
+
+    getAdvtById: builder.query({
+      query: (id) => `ads/${id}`
+    }),
+
+    editAdvtData: builder.mutation({
+      query: (userData) => {
+        const searchParams = new URLSearchParams();
+        searchParams.append('pk', userData.get('pk'));
+
+        const formData = new FormData();
+        formData.append('title', userData.get('title'));
+        formData.append('description', userData.get('description'));
+        formData.append('price', userData.get('price'));
+
+        return {
+          url: `ads/${userData.get('pk')}`,
+          method: 'PATCH',
+          body: formData,
+        };
+      },
+    })
+
 
   })
 });
@@ -135,5 +170,8 @@ export const {
   useGetCurrentUserAdvtQuery,
   useEditUserDataMutation,
   useUploadUserAvatarMutation,
-  useUploaNewADVTMutation
+  useUploaNewADVTMutation,
+  useSetCommentMutation,
+  useGetAdvtByIdQuery,
+  useEditAdvtDataMutation
 } = advtApi;

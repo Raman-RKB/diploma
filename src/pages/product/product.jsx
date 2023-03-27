@@ -54,17 +54,37 @@ import {
     AuthorName,
     AuthorAbout,
     ArticleBtn,
-    ArticleBtnSpan
+    ArticleBtnSpan,
+    ArticleBtnBlock,
+    ArticleBtnRemove,
+    ArticleBtnRedact
 } from './style/productStyle';
 
-const MainNotReg = () => {
+const Product = () => {
     const [adv, setAdv] = useState();
+    const [selectedImg, setSelectedImg] = useState();
+    const [nextImg, setNextImg] = useState(0);
     const [showPhone, setShowPhone] = useState(false);
     const { data } = useGetAlladvtQuery();
-    let { id } = useParams();
-    
+    let { id, myadvt } = useParams();
+
+    const handleEditdAdv = () => {
+        console.log(adv)
+    };
+
+
+    const handleSelectImg = (event) => {
+        setSelectedImg(event.target.src)
+    };
+
     const showPhoneClick = () => {
         setShowPhone(true)
+    };
+
+    const handleNextPhotoClick = () => {
+        const nextIndex = (nextImg + 1) % adv?.images.length;
+        setNextImg(nextIndex);
+        setSelectedImg(`http://localhost:8090/${adv?.images[nextIndex]?.url}`);
     };
 
     useEffect(() => {
@@ -77,6 +97,10 @@ const MainNotReg = () => {
             }
         }
     }, [data, id]);
+
+    useEffect(() => {
+        setSelectedImg(`http://localhost:8090/${adv?.images[0]?.url}`)
+    }, [adv]);
 
     return (
         <>
@@ -91,7 +115,7 @@ const MainNotReg = () => {
                                 </NavLink>
                             </HeaderLogo>
                             <NavLink to={`/addnewat`} replace>
-                                <HeaderBtnMainEnter>Разместить объявление</HeaderBtnMainEnter>
+                                <HeaderBtnMainEnter >Разместить объявление</HeaderBtnMainEnter>
                             </NavLink>
                             <NavLink to={`/profile`} replace>
                                 <HeaderBtnLk >Личный кабинет</HeaderBtnLk>
@@ -116,36 +140,24 @@ const MainNotReg = () => {
                         <MainArtic>
                             <ArticContent>
                                 <ArticleLeft>
-                                    <ArticleFillImg>
+                                    <ArticleFillImg >
                                         <ArticleImgContainer>
-                                            <ArticleImg src={`http://localhost:8090/${adv?.images[0]?.url}`} />
+                                            <ArticleImg onClick={handleNextPhotoClick} src={selectedImg && selectedImg} />
                                         </ArticleImgContainer>
                                         <ArticleImgBar>
-                                            <ArticleImgBarDiv>
-                                                <ArticleImgBarDivImg src={`http://localhost:8090/${adv?.images[1]?.url}`} />
-                                            </ArticleImgBarDiv>
-                                            <ArticleImgBarDiv>
-                                                <ArticleImgBarDivImg src={`http://localhost:8090/${adv?.images[2]?.url}`} />
-                                            </ArticleImgBarDiv>
-                                            <ArticleImgBarDiv>
-                                                <ArticleImgBarDivImg src={`http://localhost:8090/${adv?.images[3]?.url}`} />
-                                            </ArticleImgBarDiv>
-                                            <ArticleImgBarDiv>
-                                                <ArticleImgBarDivImg src={`http://localhost:8090/${adv?.images[4]?.url}`} />
-                                            </ArticleImgBarDiv>
-                                            <ArticleImgBarDiv>
-                                                <ArticleImgBarDivImg src={`http://localhost:8090/${adv?.images[5]?.url}`} />
-                                            </ArticleImgBarDiv>
-                                            <ArticleImgBarDiv>
-                                                <ArticleImgBarDivImg src={`http://localhost:8090/${adv?.images[6]?.url}`} />
-                                            </ArticleImgBarDiv>
+                                            {adv?.images?.slice(1, 5).map((image, index) => (
+                                                <ArticleImgBarDiv key={index}>
+                                                    <ArticleImgBarDivImg
+                                                        onClick={handleSelectImg}
+                                                        src={`http://localhost:8090/${image?.url}`}
+                                                    />
+                                                </ArticleImgBarDiv>
+                                            ))}
                                         </ArticleImgBar>
-                                        <ArticleImgBarMob>
-                                            <ImgBarMobCircle active='#FFFFFF'></ImgBarMobCircle>
-                                            <ImgBarMobCircle active=''></ImgBarMobCircle>
-                                            <ImgBarMobCircle active=''></ImgBarMobCircle>
-                                            <ImgBarMobCircle active=''></ImgBarMobCircle>
-                                            <ImgBarMobCircle active=''></ImgBarMobCircle>
+                                        <ArticleImgBarMob containerWidth={`${adv?.images?.length * 11.333}px`}>
+                                            {adv?.images?.map((img, index) => (
+                                                <ImgBarMobCircle key={index} active={nextImg === index ? '#FFFFFF' : ''} />
+                                            ))}
                                         </ArticleImgBarMob>
                                     </ArticleFillImg>
                                 </ArticleLeft>
@@ -162,7 +174,7 @@ const MainNotReg = () => {
                                             </NavLink>
                                         </ArticleInfo>
                                         <ArticlePrice>{adv?.price}</ArticlePrice>
-                                        <ArticleBtn onClick={showPhoneClick}>Показать&nbsp;телефон
+                                        <ArticleBtn myadvt={myadvt ? 'none' : ''} onClick={showPhoneClick}>Показать&nbsp;телефон
                                             <ArticleBtnSpan>
                                                 {!showPhone
                                                     ? `${adv?.user.phone.substring(0, 1)}${adv?.user.phone.substring(1, 4)} XXX XX XX`
@@ -170,12 +182,18 @@ const MainNotReg = () => {
                                                 }
                                             </ArticleBtnSpan>
                                         </ArticleBtn>
+                                        <ArticleBtnBlock myadvt={!myadvt ? 'none' : 'flex'}>
+                                            <NavLink to={`/settings/${id}`} replace>
+                                                <ArticleBtnRedact onClick={handleEditdAdv}>Редактировать</ArticleBtnRedact>
+                                            </NavLink>
+                                            <ArticleBtnRemove>Снять с публикации</ArticleBtnRemove>
+                                        </ArticleBtnBlock>
                                         <ArticleAuthor>
                                             <AuthorImgContainer>
                                                 <AuthorImg src={`http://localhost:8090/${adv?.user.avatar}`} />
                                             </AuthorImgContainer>
                                             <AuthorCont>
-                                                <NavLink to={`/seller/${id}`} replace>
+                                                <NavLink to={myadvt ? '/profile' : `/seller/${id}`} replace>
                                                     <AuthorName>{adv?.user.name}</AuthorName>
                                                 </NavLink>
                                                 <AuthorAbout>Продает товары с&nbsp;{adv?.user.sells_from}</AuthorAbout>
@@ -203,4 +221,4 @@ const MainNotReg = () => {
     );
 };
 
-export default MainNotReg;
+export default Product;

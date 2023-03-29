@@ -61,9 +61,7 @@ const AdvSettings = () => {
 
         const userData = { title, description, price, id };
         await editAdvtData(userData)
-        const addPhotoItem = { image, id }
 
-        addPhoto(addPhotoItem)
         setSaveButtonActive(false)
         navigate("/profile", { replace: true });
     };
@@ -77,7 +75,6 @@ const AdvSettings = () => {
             const imgURL = parentElement.src;
             const data = { id, imgURL }
             deletePhoto(data)
-            
         } else {
             await refreshToken()
             const fileUpload = document.getElementById('file-upload');
@@ -85,13 +82,14 @@ const AdvSettings = () => {
         }
     };
 
-    const handleProductPictureUpload = (event) => {
+    const handleProductPictureUpload = async (event) => {
         const selectedFile = event.target.files[0];
         if (!selectedFile) {
             console.log('Файл не выбран');
         } else {
             handleAddItemPhoto(selectedFile)
             console.log('Файл выбран');
+            await refreshToken()
             setQuantityOfPic(quantityOfPic + 1)
             setSaveButtonActive(true);
         };
@@ -136,8 +134,14 @@ const AdvSettings = () => {
 
     useEffect(() => {
         setQuantityOfPic(advtData?.images?.length)
-        console.log(advtData)
+        console.log(advtData?.images, 'фотки в бэке')
     }, [advtData]);
+
+    useEffect(() => {
+        const addPhotoItem = { image, id }
+        addPhoto(addPhotoItem)
+        console.log(advtData?.images, 'Картинки в бэке объявления')
+    }, [image]);
 
     return (
         <>
@@ -179,7 +183,7 @@ const AdvSettings = () => {
                                                 <FormNewArtImgCover onClick={handlePhotoClick}>
                                                     <AdvtImg
                                                         src={quantityOfPic > 0 ? `http://localhost:8090/${advtData?.images[0]?.url}` : ''}
-                                                        id={quantityOfPic > 0 ? 1 : 0}
+
                                                     />
                                                 </FormNewArtImgCover>
                                             </FormNewArtImgCoverInputLabel>
@@ -197,7 +201,7 @@ const AdvSettings = () => {
                                                 <FormNewArtImgCover onClick={handlePhotoClick}>
                                                     <AdvtImg
                                                         src={quantityOfPic > 1 ? `http://localhost:8090/${advtData?.images[1]?.url}` : ''}
-                                                        id={quantityOfPic > 1 ? 2 : 0}
+
                                                     />
                                                 </FormNewArtImgCover>
                                             </FormNewArtImgCoverInputLabel>
@@ -214,7 +218,7 @@ const AdvSettings = () => {
                                                 <FormNewArtImgCover onClick={handlePhotoClick}>
                                                     <AdvtImg
                                                         src={quantityOfPic > 2 ? `http://localhost:8090/${advtData?.images[2]?.url}` : ''}
-                                                        id={quantityOfPic > 2 ? 3 : 0}
+
                                                     />
                                                 </FormNewArtImgCover>
                                             </FormNewArtImgCoverInputLabel>
@@ -231,7 +235,7 @@ const AdvSettings = () => {
                                                 <FormNewArtImgCover onClick={handlePhotoClick}>
                                                     <AdvtImg
                                                         src={quantityOfPic > 3 ? `http://localhost:8090/${advtData?.images[3]?.url}` : ''}
-                                                        id={quantityOfPic > 3 ? 4 : 0}
+
                                                     />
                                                 </FormNewArtImgCover>
                                             </FormNewArtImgCoverInputLabel>
@@ -248,7 +252,7 @@ const AdvSettings = () => {
                                                 <FormNewArtImgCover onClick={handlePhotoClick}>
                                                     <AdvtImg
                                                         src={quantityOfPic > 4 ? `http://localhost:8090/${advtData?.images[4]?.url}` : ''}
-                                                        id={quantityOfPic > 4 ? 5 : 0}
+
                                                     />
                                                 </FormNewArtImgCover>
                                             </FormNewArtImgCoverInputLabel>

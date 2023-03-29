@@ -35,8 +35,6 @@ export const advtApi = createApi({
         localStorage.setItem("user_register_city", response.city);
         localStorage.setItem("user_register_name", response.name);
         localStorage.setItem("user_register_surname", response.surname);
-        console.log(localStorage)
-        console.log(response)
         return response;
       },
     }),
@@ -51,8 +49,6 @@ export const advtApi = createApi({
       transformResponse: (response) => {
         localStorage.setItem("access_token", response.access_token);
         localStorage.setItem("refresh_token", response.refresh_token);
-        console.log(localStorage)
-        console.log(response)
         return response;
       },
     }),
@@ -150,6 +146,7 @@ export const advtApi = createApi({
       query: (addPhoto) => {
         const formData = new FormData();
         formData.append('file', addPhoto.image);
+
         return {
           url: `ads/${addPhoto.id}/image`,
           method: 'POST',
@@ -166,8 +163,6 @@ export const advtApi = createApi({
         searchParams.append('pk', data.id);
         searchParams.append('file_url', new_url);
 
-        console.log(searchParams.get('file_url'), 'ссылка в параметрах')
-
         return {
           url: `ads/${data.id}/image`,
           method: 'DELETE',
@@ -182,7 +177,6 @@ export const advtApi = createApi({
 
     deleteAdvt: builder.mutation({
       query: (id) => {
-        console.log(id, 'ссылка в запросе')
 
         const searchParams = new URLSearchParams();
         searchParams.append('pk', id);

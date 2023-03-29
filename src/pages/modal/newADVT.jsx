@@ -3,6 +3,7 @@ import { useUploaNewADVTMutation } from '../../services/servises';
 import React, { useState, useEffect } from 'react';
 import { NavLink } from "react-router-dom";
 import { useRefreshTokenMutation } from '../../services/servises';
+import { useNavigate } from "react-router-dom";
 
 import {
     ContainerBg,
@@ -38,24 +39,28 @@ const MainNotReg = () => {
     const [images, setImages] = useState([]);
     const [inputAndAvaFilled, setInputAndAvaFilled] = useState();
     const [saveButtonActive, setSaveButtonActive] = useState(false);
+    const [quantityOfPic, setQuantityOfPic] = useState(0);
+    const navigate = useNavigate();
 
     const [uploaNewADVT, { data }] = useUploaNewADVTMutation();
     const [refreshToken] = useRefreshTokenMutation();
 
     const handleUploaNewADVT = async (event) => {
         event.preventDefault();
+        setSaveButtonActive(false);
         await refreshToken()
 
         const formData = new FormData();
         formData.append('title', title);
         formData.append('description', description);
         formData.append('price', price);
+
         images.forEach((image, index) => {
             formData.append(`image${index + 1}`, image);
         });
 
         uploaNewADVT(formData);
-
+        navigate("/profile", { replace: true });
     };
 
     const handlePhotoClick = (event) => {
@@ -78,6 +83,7 @@ const MainNotReg = () => {
         } else {
             handleAddItemPhoto(selectedFile)
             console.log('Файл выбран');
+            setQuantityOfPic(quantityOfPic + 1)
         };
     };
 
@@ -120,6 +126,10 @@ const MainNotReg = () => {
         }
     }, [inputAndAvaFilled]);
 
+    useEffect(() => {
+        console.log(data, 'количество фото в бэке')
+    }, [data]);
+
     return (
         <>
             <GlobalStyle />
@@ -152,7 +162,8 @@ const MainNotReg = () => {
                                             <FormNewArtImg />
                                             <FormNewArtImgCoverInputLabel for="file-upload">
                                                 <FormNewArtImgCover onClick={handlePhotoClick}>
-                                                    <AdvtImg src={`http://localhost:8090/${data?.images[0]?.url}`} />
+                                                    <AdvtImg
+                                                        src={quantityOfPic > 0 ? `http://localhost:8090/${data?.images[0]?.url}` : ''} />
                                                 </FormNewArtImgCover>
                                             </FormNewArtImgCoverInputLabel>
                                             <FormNewArtImgCoverInput
@@ -161,11 +172,12 @@ const MainNotReg = () => {
                                                 id="file-upload"
                                             />
                                         </FormNewArtImgContainer>
-                                        <FormNewArtImgContainer>
+                                        <FormNewArtImgContainer display={quantityOfPic > 0 ? '' : 'none'}>
                                             <FormNewArtImg />
                                             <FormNewArtImgCoverInputLabel for="file-upload">
                                                 <FormNewArtImgCover onClick={handlePhotoClick}>
-                                                    <AdvtImg src={`http://localhost:8090/${data?.images[1]?.url}`} />
+                                                    <AdvtImg
+                                                        src={quantityOfPic > 1 ? `http://localhost:8090/${data?.images[1]?.url}` : ''} />
                                                 </FormNewArtImgCover>
                                             </FormNewArtImgCoverInputLabel>
                                             <FormNewArtImgCoverInput
@@ -174,11 +186,12 @@ const MainNotReg = () => {
                                                 id="file-upload"
                                             />
                                         </FormNewArtImgContainer>
-                                        <FormNewArtImgContainer>
+                                        <FormNewArtImgContainer display={!quantityOfPic || quantityOfPic < 2 ? 'none' : ''}>
                                             <FormNewArtImg />
                                             <FormNewArtImgCoverInputLabel for="file-upload">
                                                 <FormNewArtImgCover onClick={handlePhotoClick}>
-                                                    <AdvtImg src={`http://localhost:8090/${data?.images[2]?.url}`} />
+                                                    <AdvtImg
+                                                        src={quantityOfPic > 2 ? `http://localhost:8090/${data?.images[2]?.url}` : ''} />
                                                 </FormNewArtImgCover>
                                             </FormNewArtImgCoverInputLabel>
                                             <FormNewArtImgCoverInput
@@ -187,11 +200,12 @@ const MainNotReg = () => {
                                                 id="file-upload"
                                             />
                                         </FormNewArtImgContainer>
-                                        <FormNewArtImgContainer>
+                                        <FormNewArtImgContainer display={!quantityOfPic || quantityOfPic < 3 ? 'none' : ''}>
                                             <FormNewArtImg />
                                             <FormNewArtImgCoverInputLabel for="file-upload">
                                                 <FormNewArtImgCover onClick={handlePhotoClick}>
-                                                    <AdvtImg src={`http://localhost:8090/${data?.images[3]?.url}`} />
+                                                    <AdvtImg
+                                                        src={quantityOfPic > 3 ? `http://localhost:8090/${data?.images[3]?.url}` : ''} />
                                                 </FormNewArtImgCover>
                                             </FormNewArtImgCoverInputLabel>
                                             <FormNewArtImgCoverInput
@@ -200,11 +214,12 @@ const MainNotReg = () => {
                                                 id="file-upload"
                                             />
                                         </FormNewArtImgContainer>
-                                        <FormNewArtImgContainer>
+                                        <FormNewArtImgContainer display={!quantityOfPic || quantityOfPic < 4 ? 'none' : ''}>
                                             <FormNewArtImg />
                                             <FormNewArtImgCoverInputLabel for="file-upload">
                                                 <FormNewArtImgCover onClick={handlePhotoClick}>
-                                                    <AdvtImg src={`http://localhost:8090/${data?.images[4]?.url}`} />
+                                                    <AdvtImg
+                                                        src={quantityOfPic > 4 ? `http://localhost:8090/${data?.images[4]?.url}` : ''} />
                                                 </FormNewArtImgCover>
                                             </FormNewArtImgCoverInputLabel>
                                             <FormNewArtImgCoverInput

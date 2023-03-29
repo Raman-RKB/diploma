@@ -5,6 +5,10 @@ import { useRefreshTokenMutation } from '../../services/servises';
 import { useParams } from "react-router-dom";
 import { useGetAdvtByIdQuery } from '../../services/servises';
 import { useEditAdvtDataMutation } from '../../services/servises';
+import { useAddPhotoMutation } from '../../services/servises';
+import { useNavigate } from "react-router-dom";
+import { useDeletePhotoMutation } from '../../services/servises';
+// import { useGetImgQuery } from '../../services/servises';
 
 import {
     ContainerBg,
@@ -40,34 +44,45 @@ const AdvSettings = () => {
     const [image, setImage] = useState([]);
     const [inputAndAvaFilled, setInputAndAvaFilled] = useState();
     const [saveButtonActive, setSaveButtonActive] = useState(false);
+    const [quantityOfPic, setQuantityOfPic] = useState();
+    const navigate = useNavigate();
+    // const [imgDelete, setImgDelete] = useState();
 
     const [refreshToken] = useRefreshTokenMutation();
     let { id } = useParams();
     const { data: advtData } = useGetAdvtByIdQuery(id);
     const [editAdvtData] = useEditAdvtDataMutation(id);
+    const [addPhoto] = useAddPhotoMutation();
+    const [deletePhoto] = useDeletePhotoMutation();
 
     const handleUploaNewADVT = async (event) => {
         event.preventDefault();
-
         await refreshToken()
-        let images = image[0]
-        const userData = { title, description, price, id, images:[images]  };
-        // images.forEach((image, index) => {
-        //     userData.push(`image${index + 1}`, image);
-        // });
-        editAdvtData(userData)
+
+        const userData = { title, description, price, id };
+        await editAdvtData(userData)
+        const addPhotoItem = { image, id }
+
+        addPhoto(addPhotoItem)
+        setSaveButtonActive(false)
+        navigate("/profile", { replace: true });
     };
 
-    const handlePhotoClick = (event) => {
+    const handlePhotoClick = async (event) => {
         event.preventDefault();
-        const fileUpload = document.getElementById('file-upload');
-        fileUpload.click();
+        const parentElement = event.target;
 
-        fileUpload.addEventListener('change', () => {
-            if (fileUpload.files && fileUpload.files[0]) {
-                setSaveButtonActive(true);
-            }
-        });
+        if (parentElement.tagName === 'IMG') {
+            await refreshToken()
+            const imgURL = parentElement.src;
+            const data = { id, imgURL }
+            deletePhoto(data)
+            
+        } else {
+            await refreshToken()
+            const fileUpload = document.getElementById('file-upload');
+            await fileUpload.click();
+        }
     };
 
     const handleProductPictureUpload = (event) => {
@@ -77,11 +92,13 @@ const AdvSettings = () => {
         } else {
             handleAddItemPhoto(selectedFile)
             console.log('Файл выбран');
+            setQuantityOfPic(quantityOfPic + 1)
+            setSaveButtonActive(true);
         };
     };
 
     const handleAddItemPhoto = (newItem) => {
-        setImage((prevItems) => prevItems.concat(newItem));
+        setImage(newItem);
     };
 
     const handleTitleChange = (event) => {
@@ -102,10 +119,6 @@ const AdvSettings = () => {
     };
 
     useEffect(() => {
-        console.log(image)
-    }, [image]);
-
-    useEffect(() => {
         const inputs = document.querySelectorAll('input, textarea');
         let allAreEmpty = true;
         inputs.forEach(input => {
@@ -120,6 +133,11 @@ const AdvSettings = () => {
             setSaveButtonActive(true)
         }
     }, [inputAndAvaFilled]);
+
+    useEffect(() => {
+        setQuantityOfPic(advtData?.images?.length)
+        console.log(advtData)
+    }, [advtData]);
 
     return (
         <>
@@ -138,26 +156,49 @@ const AdvSettings = () => {
                                 <FormNewArtBlock>
                                     <FormNewArtLabel for="name">Название</FormNewArtLabel>
                                     <FormNewArtInput
-                                        // value={advtData?.title}
-                                        onChange={handleTitleChange} type="text" name="name" id="formName"
+                                        defaultValue={advtData?.title}
+                                        onChange={handleTitleChange}
+                                        type="text"
+                                        name="name"
+                                        id="formName"
                                         placeholder="Введите название" />
                                 </FormNewArtBlock>
                                 <FormNewArtBlock>
                                     <FormNewArtLabel for="text">Описание</FormNewArtLabel>
                                     <FormNewArtArea
-                                        // value={advtData?.description}
+                                        defaultValue={advtData?.description}
                                         onChange={handleDescriptionChange} name="text" id="formArea" cols="auto" rows="10"
                                         placeholder="Введите описание" />
                                 </FormNewArtBlock>
                                 <FormNewArtBlock>
                                     <FormNewArtP >Фотографии товара<FormNewArtPSpan>не более 5 фотографий</FormNewArtPSpan></FormNewArtP>
                                     <FormNewArtBarImg>
+                                        <FormNewArtImgContainer >
+                                            <FormNewArtImg />
+                                            <FormNewArtImgCoverInputLabel for="file-upload">
+                                                <FormNewArtImgCover onClick={handlePhotoClick}>
+                                                    <AdvtImg
+                                                        src={quantityOfPic > 0 ? `http://localhost:8090/${advtData?.images[0]?.url}` : ''}
+                                                        id={quantityOfPic > 0 ? 1 : 0}
+                                                    />
+                                                </FormNewArtImgCover>
+                                            </FormNewArtImgCoverInputLabel>
+                                            <FormNewArtImgCoverInput
+                                                onChange={handleProductPictureUpload}
+                                                type="file"
+                                                id="file-upload"
+                                            />
+                                        </FormNewArtImgContainer >
 
-                                        <FormNewArtImgContainer>
+                                        <FormNewArtImgContainer
+                                            display={quantityOfPic < 1 ? 'none' : ''}>
                                             <FormNewArtImg />
                                             <FormNewArtImgCoverInputLabel for="file-upload">
                                                 <FormNewArtImgCover onClick={handlePhotoClick}>
-                                                    <AdvtImg src={`http://localhost:8090/${advtData?.images[0]?.url}`} />
+                                                    <AdvtImg
+                                                        src={quantityOfPic > 1 ? `http://localhost:8090/${advtData?.images[1]?.url}` : ''}
+                                                        id={quantityOfPic > 1 ? 2 : 0}
+                                                    />
                                                 </FormNewArtImgCover>
                                             </FormNewArtImgCoverInputLabel>
                                             <FormNewArtImgCoverInput
@@ -166,11 +207,15 @@ const AdvSettings = () => {
                                                 id="file-upload"
                                             />
                                         </FormNewArtImgContainer>
-                                        <FormNewArtImgContainer>
+                                        <FormNewArtImgContainer
+                                            display={quantityOfPic < 2 ? 'none' : ''}>
                                             <FormNewArtImg />
                                             <FormNewArtImgCoverInputLabel for="file-upload">
                                                 <FormNewArtImgCover onClick={handlePhotoClick}>
-                                                    <AdvtImg src={`http://localhost:8090/${advtData?.images[1]?.url}`} />
+                                                    <AdvtImg
+                                                        src={quantityOfPic > 2 ? `http://localhost:8090/${advtData?.images[2]?.url}` : ''}
+                                                        id={quantityOfPic > 2 ? 3 : 0}
+                                                    />
                                                 </FormNewArtImgCover>
                                             </FormNewArtImgCoverInputLabel>
                                             <FormNewArtImgCoverInput
@@ -179,11 +224,15 @@ const AdvSettings = () => {
                                                 id="file-upload"
                                             />
                                         </FormNewArtImgContainer>
-                                        <FormNewArtImgContainer>
+                                        <FormNewArtImgContainer
+                                            display={quantityOfPic < 3 ? 'none' : ''}>
                                             <FormNewArtImg />
                                             <FormNewArtImgCoverInputLabel for="file-upload">
                                                 <FormNewArtImgCover onClick={handlePhotoClick}>
-                                                    <AdvtImg src={`http://localhost:8090/${advtData?.images[2]?.url}`} />
+                                                    <AdvtImg
+                                                        src={quantityOfPic > 3 ? `http://localhost:8090/${advtData?.images[3]?.url}` : ''}
+                                                        id={quantityOfPic > 3 ? 4 : 0}
+                                                    />
                                                 </FormNewArtImgCover>
                                             </FormNewArtImgCoverInputLabel>
                                             <FormNewArtImgCoverInput
@@ -192,11 +241,15 @@ const AdvSettings = () => {
                                                 id="file-upload"
                                             />
                                         </FormNewArtImgContainer>
-                                        <FormNewArtImgContainer>
+                                        <FormNewArtImgContainer
+                                            display={quantityOfPic < 4 ? 'none' : ''}>
                                             <FormNewArtImg />
                                             <FormNewArtImgCoverInputLabel for="file-upload">
                                                 <FormNewArtImgCover onClick={handlePhotoClick}>
-                                                    <AdvtImg src={`http://localhost:8090/${advtData?.images[3]?.url}`} />
+                                                    <AdvtImg
+                                                        src={quantityOfPic > 4 ? `http://localhost:8090/${advtData?.images[4]?.url}` : ''}
+                                                        id={quantityOfPic > 4 ? 5 : 0}
+                                                    />
                                                 </FormNewArtImgCover>
                                             </FormNewArtImgCoverInputLabel>
                                             <FormNewArtImgCoverInput
@@ -205,26 +258,12 @@ const AdvSettings = () => {
                                                 id="file-upload"
                                             />
                                         </FormNewArtImgContainer>
-                                        <FormNewArtImgContainer>
-                                            <FormNewArtImg />
-                                            <FormNewArtImgCoverInputLabel for="file-upload">
-                                                <FormNewArtImgCover onClick={handlePhotoClick}>
-                                                    <AdvtImg src={`http://localhost:8090/${advtData?.images[4]?.url}`} />
-                                                </FormNewArtImgCover>
-                                            </FormNewArtImgCoverInputLabel>
-                                            <FormNewArtImgCoverInput
-                                                onChange={handleProductPictureUpload}
-                                                type="file"
-                                                id="file-upload"
-                                            />
-                                        </FormNewArtImgContainer>
-
                                     </FormNewArtBarImg>
                                 </FormNewArtBlock>
                                 <FormNewArtBlockPrice>
                                     <FormNewArtLabel for="price">Цена</FormNewArtLabel>
                                     <FormNewArtInputPrice
-                                        // value={advtData?.price}
+                                        defaultValue={advtData?.price}
                                         onChange={handlePriceChange}
                                         type="text"
                                         name="price"

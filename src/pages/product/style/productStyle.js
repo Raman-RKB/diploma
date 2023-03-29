@@ -1,6 +1,7 @@
 
 // import styled, { css } from "styled-components";
 import styled from "styled-components";
+import { NavLink } from 'react-router-dom';
 
 export const Container = styled.div`
   max-width: 1440px;
@@ -1111,4 +1112,11 @@ export const ArticleBtnRemove = styled.button`
     line-height: 20px;
     color: #FFFFFF;
     }
+`;
+
+export const StyledNavLink = styled(NavLink)`
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 `;

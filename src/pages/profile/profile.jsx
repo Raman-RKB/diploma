@@ -156,6 +156,10 @@ const Profile = () => {
         setActualUserData(currentUser)
     }, [currentUser]);
 
+    useEffect(() => {
+        console.log(data, 'данные об объявлениях')
+    }, [data]);
+
     return (
         <>
             <GlobalStyle />
@@ -244,8 +248,8 @@ const Profile = () => {
                             </MainCenterBlock>
 
                             <MainContent>
-                                <ContentCards>
-                                    {data && data?.map((item) => (
+                                {data ? <ContentCards>
+                                    {data.map((item) => (
                                         <CardsItem
                                             key={item?.id}
                                             myAdvt='myAdvt'
@@ -257,7 +261,7 @@ const Profile = () => {
                                             picture={`http://localhost:8090/${item.images[0]?.url}`}
                                         />
                                     ))}
-                                </ContentCards>
+                                </ContentCards> : null}
                             </MainContent>
                         </MainContainer>
                     </main >

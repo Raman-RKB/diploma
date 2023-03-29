@@ -144,7 +144,55 @@ export const advtApi = createApi({
         method: 'PATCH',
         body: formData,
       }),
-    })
+    }),
+
+    addPhoto: builder.mutation({
+      query: (addPhoto) => {
+        const formData = new FormData();
+        formData.append('file', addPhoto.image);
+        return {
+          url: `ads/${addPhoto.id}/image`,
+          method: 'POST',
+          body: formData,
+        }
+      }
+    }),
+
+    deletePhoto: builder.mutation({
+      query: (data) => {
+        const url = data.imgURL
+        const new_url = url.replace("http://localhost:8090/", "")
+        const searchParams = new URLSearchParams();
+        searchParams.append('pk', data.id);
+        searchParams.append('file_url', new_url);
+
+        console.log(searchParams.get('file_url'), 'ссылка в параметрах')
+
+        return {
+          url: `ads/${data.id}/image`,
+          method: 'DELETE',
+          body: searchParams,
+        }
+      }
+    }),
+
+    getImg: builder.query({
+      query: (id) => `images/${id}`
+    }),
+
+    deleteAdvt: builder.mutation({
+      query: (id) => {
+        console.log(id, 'ссылка в запросе')
+
+        const searchParams = new URLSearchParams();
+        searchParams.append('pk', id);
+
+        return {
+          url: `ads/${id}`,
+          method: 'DELETE',
+        }
+      }
+    }),
 
   })
 });
@@ -162,5 +210,9 @@ export const {
   useUploaNewADVTMutation,
   useSetCommentMutation,
   useGetAdvtByIdQuery,
-  useEditAdvtDataMutation
+  useEditAdvtDataMutation,
+  useAddPhotoMutation,
+  useDeletePhotoMutation,
+  useGetImgQuery,
+  useDeleteAdvtMutation
 } = advtApi;

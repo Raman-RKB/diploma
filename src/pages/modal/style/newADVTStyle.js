@@ -303,7 +303,6 @@ export const FormNewArtBarImg = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
   margin-bottom: 10px;
   overflow: hidden;
 
@@ -319,11 +318,17 @@ export const FormNewArtBarImg = styled.div`
 `;
 
 export const FormNewArtImgContainer = styled.div`
+  display: ${props => props.display};
   width: 90px;
   height: 90px;
   margin-right: 10px;
   position: relative;
   z-index: 0;
+
+    &:hover {
+  background-color: #0080C1;
+  
+  }
 
   @media screen and (max-width: 600px) {
     display: block;
@@ -360,7 +365,11 @@ export const FormNewArtImgCover = styled.div`
   left: 0;
   background-color: #F0F0F0;
   z-index: -1;
-  
+      cursor: pointer;
+
+  &:hover {
+  background-color: rgb(199 190 190);
+}
 
   &::after, &::before {
   content: "";

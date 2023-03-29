@@ -9,6 +9,9 @@ import { useGetAlladvtQuery } from '../../services/servises';
 import { NavLink } from "react-router-dom";
 import { Wrapper, GlobalStyle } from './style/globalStyle';
 import React, { useState, useEffect } from 'react';
+import { useDeleteAdvtMutation } from '../../services/servises';
+import { useRefreshTokenMutation } from '../../services/servises';
+import { useNavigate } from "react-router-dom";
 
 import {
     Container,
@@ -57,7 +60,8 @@ import {
     ArticleBtnSpan,
     ArticleBtnBlock,
     ArticleBtnRemove,
-    ArticleBtnRedact
+    ArticleBtnRedact,
+    StyledNavLink
 } from './style/productStyle';
 
 const Product = () => {
@@ -66,12 +70,20 @@ const Product = () => {
     const [nextImg, setNextImg] = useState(0);
     const [showPhone, setShowPhone] = useState(false);
     const { data } = useGetAlladvtQuery();
+    const [deleteAdvt] = useDeleteAdvtMutation();
+    const [refreshToken] = useRefreshTokenMutation();
     let { id, myadvt } = useParams();
+    const navigate = useNavigate();
 
     const handleEditdAdv = () => {
         console.log(adv)
     };
 
+    const handleDeletedAdvt = async () => {
+        await refreshToken()
+        deleteAdvt(id)
+        navigate("/profile", { replace: true });
+    };
 
     const handleSelectImg = (event) => {
         setSelectedImg(event.target.src)
@@ -183,10 +195,10 @@ const Product = () => {
                                             </ArticleBtnSpan>
                                         </ArticleBtn>
                                         <ArticleBtnBlock myadvt={!myadvt ? 'none' : 'flex'}>
-                                            <NavLink to={`/settings/${id}`} replace>
+                                            <StyledNavLink to={`/settings/${id}`} replace>
                                                 <ArticleBtnRedact onClick={handleEditdAdv}>Редактировать</ArticleBtnRedact>
-                                            </NavLink>
-                                            <ArticleBtnRemove>Снять с публикации</ArticleBtnRemove>
+                                            </StyledNavLink>
+                                            <ArticleBtnRemove onClick={handleDeletedAdvt}>Снять с публикации</ArticleBtnRemove>
                                         </ArticleBtnBlock>
                                         <ArticleAuthor>
                                             <AuthorImgContainer>

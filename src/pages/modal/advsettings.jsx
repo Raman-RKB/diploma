@@ -8,7 +8,6 @@ import { useEditAdvtDataMutation } from '../../services/servises';
 import { useAddPhotoMutation } from '../../services/servises';
 import { useNavigate } from "react-router-dom";
 import { useDeletePhotoMutation } from '../../services/servises';
-// import { useGetImgQuery } from '../../services/servises';
 
 import {
     ContainerBg,
@@ -46,7 +45,7 @@ const AdvSettings = () => {
     const [saveButtonActive, setSaveButtonActive] = useState(false);
     const [quantityOfPic, setQuantityOfPic] = useState();
     const navigate = useNavigate();
-    // const [imgDelete, setImgDelete] = useState();
+    const [imgSelected, setImgSelected] = useState([]);
 
     const [refreshToken] = useRefreshTokenMutation();
     let { id } = useParams();
@@ -58,10 +57,8 @@ const AdvSettings = () => {
     const handleUploaNewADVT = async (event) => {
         event.preventDefault();
         await refreshToken()
-
         const userData = { title, description, price, id };
         await editAdvtData(userData)
-
         setSaveButtonActive(false)
         navigate("/profile", { replace: true });
     };
@@ -71,12 +68,20 @@ const AdvSettings = () => {
         const parentElement = event.target;
 
         if (parentElement.tagName === 'IMG') {
-            await refreshToken()
-            const imgURL = parentElement.src;
-            const data = { id, imgURL }
-            deletePhoto(data)
+            if (confirm("Вы уверены, что хотите удалить фото?")) {
+                await refreshToken()
+                const imgURL = parentElement.src;
+                const indexImg = parentElement.id;
+                const data = { id, imgURL }
+                deletePhoto(data)
+                setQuantityOfPic(quantityOfPic - 1)
+                setImgSelected(imgSelected.splice(indexImg, 1))
+                    setSaveButtonActive(true)
+            } else {
+                return
+            }
+
         } else {
-            await refreshToken()
             const fileUpload = document.getElementById('file-upload');
             await fileUpload.click();
         }
@@ -84,6 +89,7 @@ const AdvSettings = () => {
 
     const handleProductPictureUpload = async (event) => {
         const selectedFile = event.target.files[0];
+
         if (!selectedFile) {
             console.log('Файл не выбран');
         } else {
@@ -92,6 +98,10 @@ const AdvSettings = () => {
             await refreshToken()
             setQuantityOfPic(quantityOfPic + 1)
             setSaveButtonActive(true);
+
+            const selectedImg = URL.createObjectURL(selectedFile)
+            setImgSelected([...imgSelected, { selectedImg }])
+
         };
     };
 
@@ -134,13 +144,12 @@ const AdvSettings = () => {
 
     useEffect(() => {
         setQuantityOfPic(advtData?.images?.length)
-        console.log(advtData?.images, 'фотки в бэке')
+        setImgSelected(advtData?.images)
     }, [advtData]);
 
     useEffect(() => {
         const addPhotoItem = { image, id }
         addPhoto(addPhotoItem)
-        console.log(advtData?.images, 'Картинки в бэке объявления')
     }, [image]);
 
     return (
@@ -182,8 +191,9 @@ const AdvSettings = () => {
                                             <FormNewArtImgCoverInputLabel for="file-upload">
                                                 <FormNewArtImgCover onClick={handlePhotoClick}>
                                                     <AdvtImg
-                                                        src={quantityOfPic > 0 ? `http://localhost:8090/${advtData?.images[0]?.url}` : ''}
-
+                                                        src={imgSelected === undefined || quantityOfPic < 1 ? '' :
+                                                            (imgSelected[0]?.selectedImg ? imgSelected[0]?.selectedImg : `http://localhost:8090/${imgSelected[0]?.url}`)}
+                                                        id='0'
                                                     />
                                                 </FormNewArtImgCover>
                                             </FormNewArtImgCoverInputLabel>
@@ -195,13 +205,15 @@ const AdvSettings = () => {
                                         </FormNewArtImgContainer >
 
                                         <FormNewArtImgContainer
-                                            display={quantityOfPic < 1 ? 'none' : ''}>
+                                            display={quantityOfPic < 0 ? 'none' : ''}>
                                             <FormNewArtImg />
                                             <FormNewArtImgCoverInputLabel for="file-upload">
                                                 <FormNewArtImgCover onClick={handlePhotoClick}>
-                                                    <AdvtImg
-                                                        src={quantityOfPic > 1 ? `http://localhost:8090/${advtData?.images[1]?.url}` : ''}
 
+                                                    <AdvtImg
+                                                        src={imgSelected === undefined || quantityOfPic < 2 ? '' :
+                                                            (imgSelected[1]?.selectedImg ? imgSelected[1]?.selectedImg : `http://localhost:8090/${imgSelected[1]?.url}`)}
+                                                        id='1'
                                                     />
                                                 </FormNewArtImgCover>
                                             </FormNewArtImgCoverInputLabel>
@@ -217,8 +229,9 @@ const AdvSettings = () => {
                                             <FormNewArtImgCoverInputLabel for="file-upload">
                                                 <FormNewArtImgCover onClick={handlePhotoClick}>
                                                     <AdvtImg
-                                                        src={quantityOfPic > 2 ? `http://localhost:8090/${advtData?.images[2]?.url}` : ''}
-
+                                                        src={imgSelected === undefined || quantityOfPic < 3 ? '' :
+                                                            (imgSelected[2]?.selectedImg ? imgSelected[2]?.selectedImg : `http://localhost:8090/${imgSelected[2]?.url}`)}
+                                                        id='2'
                                                     />
                                                 </FormNewArtImgCover>
                                             </FormNewArtImgCoverInputLabel>
@@ -234,8 +247,9 @@ const AdvSettings = () => {
                                             <FormNewArtImgCoverInputLabel for="file-upload">
                                                 <FormNewArtImgCover onClick={handlePhotoClick}>
                                                     <AdvtImg
-                                                        src={quantityOfPic > 3 ? `http://localhost:8090/${advtData?.images[3]?.url}` : ''}
-
+                                                        src={imgSelected === undefined || quantityOfPic < 4 ? '' :
+                                                            (imgSelected[3]?.selectedImg ? imgSelected[3]?.selectedImg : `http://localhost:8090/${imgSelected[3]?.url}`)}
+                                                        id='3'
                                                     />
                                                 </FormNewArtImgCover>
                                             </FormNewArtImgCoverInputLabel>
@@ -251,8 +265,9 @@ const AdvSettings = () => {
                                             <FormNewArtImgCoverInputLabel for="file-upload">
                                                 <FormNewArtImgCover onClick={handlePhotoClick}>
                                                     <AdvtImg
-                                                        src={quantityOfPic > 4 ? `http://localhost:8090/${advtData?.images[4]?.url}` : ''}
-
+                                                        src={imgSelected === undefined || quantityOfPic < 5 ? '' :
+                                                            (imgSelected[4]?.selectedImg ? imgSelected[4]?.selectedImg : `http://localhost:8090/${imgSelected[4]?.url}`)}
+                                                        id='4'
                                                     />
                                                 </FormNewArtImgCover>
                                             </FormNewArtImgCoverInputLabel>

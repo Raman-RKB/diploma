@@ -159,14 +159,10 @@ export const advtApi = createApi({
       query: (data) => {
         const url = data.imgURL
         const new_url = url.replace("http://localhost:8090/", "")
-        const searchParams = new URLSearchParams();
-        searchParams.append('pk', data.id);
-        searchParams.append('file_url', new_url);
 
         return {
-          url: `ads/${data.id}/image`,
+          url: `ads/${data.id}/image?file_url=${new_url}`,
           method: 'DELETE',
-          body: searchParams,
         }
       }
     }),

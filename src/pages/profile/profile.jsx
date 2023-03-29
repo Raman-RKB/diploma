@@ -160,6 +160,13 @@ const Profile = () => {
         console.log(data, 'данные об объявлениях')
     }, [data]);
 
+        useEffect(() => {
+            setName(actualUserData?.name)
+            setSurname(actualUserData?.surname)
+            setCity(actualUserData?.city)
+            setPhone(actualUserData?.phone)
+    }, [actualUserData]);
+
     return (
         <>
             <GlobalStyle />
@@ -218,19 +225,36 @@ const Profile = () => {
                                                 <SettingsForm>
                                                     <SettingsDiv>
                                                         <SettingsFormLabel for="settings-fname">Имя</SettingsFormLabel>
-                                                        <SettingsFormInput onChange={handleNameChange} id="settings-fname" name="fname" type="text" />
+                                                        <SettingsFormInput
+                                                            onChange={handleNameChange}
+                                                            id="settings-fname"
+                                                            name="fname"
+                                                            type="text"
+                                                            defaultValue={actualUserData?.name} />
                                                     </SettingsDiv>
                                                     <SettingsDiv>
                                                         <SettingsFormLabel for="lname">Фамилия</SettingsFormLabel>
-                                                        <SettingsFormInput onChange={handleSurnameChange} id="settings-lname" name="lname" type="text" />
+                                                        <SettingsFormInput   onChange={handleSurnameChange}
+                                                            id="settings-fname"
+                                                            name="fname"
+                                                            type="text"
+                                                            defaultValue={actualUserData?.surname}/>
                                                     </SettingsDiv>
                                                     <SettingsDiv>
                                                         <SettingsFormLabel for="city">Город</SettingsFormLabel>
-                                                        <SettingsFormInput onChange={handleCityChange} id="settings-city" name="city" type="text" />
+                                                        <SettingsFormInput   onChange={handleCityChange}
+                                                            id="settings-fname"
+                                                            name="fname"
+                                                            type="text"
+                                                            defaultValue={actualUserData?.city} />
                                                     </SettingsDiv>
                                                     <SettingsDiv>
                                                         <SettingsFormLabel for="phone">Телефон</SettingsFormLabel>
-                                                        <SettingsPhoneInput onChange={handlePhoneChange} id="settings-phone" name="phone" type="tel" />
+                                                        <SettingsPhoneInput   onChange={handlePhoneChange}
+                                                            id="settings-fname"
+                                                            name="fname"
+                                                            type="text"
+                                                            defaultValue={actualUserData?.phone} />
                                                     </SettingsDiv>
                                                     <SettingsBtn
                                                         active={!saveButtonActive ? '#D9D9D9' : '#009EE4'}

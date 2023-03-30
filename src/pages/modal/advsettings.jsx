@@ -37,11 +37,10 @@ import {
 } from './style/newADVTStyle';
 
 const AdvSettings = () => {
-    const [title, setTitle] = useState('');
-    const [description, setDescription] = useState('');
+    const [title, setTitle] = useState();
+    const [description, setDescription] = useState();
     const [price, setPrice] = useState();
     const [image, setImage] = useState([]);
-    const [inputAndAvaFilled, setInputAndAvaFilled] = useState();
     const [saveButtonActive, setSaveButtonActive] = useState(false);
     const [quantityOfPic, setQuantityOfPic] = useState();
     const navigate = useNavigate();
@@ -54,7 +53,7 @@ const AdvSettings = () => {
     const [addPhoto] = useAddPhotoMutation();
     const [deletePhoto] = useDeletePhotoMutation();
 
-    const handleUploaNewADVT = async (event) => {
+    const handleUploaEditADVT = async (event) => {
         event.preventDefault();
         await refreshToken()
         const userData = { title, description, price, id };
@@ -76,7 +75,8 @@ const AdvSettings = () => {
                 deletePhoto(data)
                 setQuantityOfPic(quantityOfPic - 1)
                 setImgSelected(imgSelected.splice(indexImg, 1))
-                    setSaveButtonActive(true)
+
+                setSaveButtonActive(true)
             } else {
                 return
             }
@@ -111,36 +111,32 @@ const AdvSettings = () => {
 
     const handleTitleChange = (event) => {
         setTitle(event.target.value);
-        setInputAndAvaFilled(event.target.value)
     };
 
     const handleDescriptionChange = (event) => {
         setDescription(event.target.value);
-        setInputAndAvaFilled(event.target.value)
     };
 
     const handlePriceChange = (event) => {
         setPrice(event.target.value);
         document.getElementById("formPrice").removeAttribute("value");
-
-        setInputAndAvaFilled(event.target.value)
     };
 
     useEffect(() => {
-        const inputs = document.querySelectorAll('input, textarea');
-        let allAreEmpty = true;
-        inputs.forEach(input => {
-            if (input.value.trim() !== '') {
-                allAreEmpty = false;
-            }
-        });
+        const titleInput = document.getElementById('formName');
+        const descriptionInput = document.getElementById('description');
+        const formPriceInput = document.getElementById('formPrice');
 
-        if (allAreEmpty) {
-            setSaveButtonActive(false)
+        if (
+            titleInput.value === advtData?.title &&
+            descriptionInput.value === advtData?.description &&
+            formPriceInput.value === advtData?.price.toString()
+        ) {
+            setSaveButtonActive(false);
         } else {
-            setSaveButtonActive(true)
+            setSaveButtonActive(true);
         }
-    }, [inputAndAvaFilled]);
+    }, [advtData, title, description, price]);
 
     useEffect(() => {
         setQuantityOfPic(advtData?.images?.length)
@@ -167,7 +163,7 @@ const AdvSettings = () => {
                             </NavLink>
                             <ModalFormNewArt>
                                 <FormNewArtBlock>
-                                    <FormNewArtLabel for="name">Название</FormNewArtLabel>
+                                    <FormNewArtLabel id='title' for="name">Название</FormNewArtLabel>
                                     <FormNewArtInput
                                         defaultValue={advtData?.title}
                                         onChange={handleTitleChange}
@@ -180,7 +176,7 @@ const AdvSettings = () => {
                                     <FormNewArtLabel for="text">Описание</FormNewArtLabel>
                                     <FormNewArtArea
                                         defaultValue={advtData?.description}
-                                        onChange={handleDescriptionChange} name="text" id="formArea" cols="auto" rows="10"
+                                        onChange={handleDescriptionChange} name="text" id="description" cols="auto" rows="10"
                                         placeholder="Введите описание" />
                                 </FormNewArtBlock>
                                 <FormNewArtBlock>
@@ -292,7 +288,7 @@ const AdvSettings = () => {
                                 <FormNewArtBtnPub
                                     active={!saveButtonActive ? '#D9D9D9' : '#009EE4'}
                                     activeHover={!saveButtonActive ? '#D9D9D9' : '#0080C1'}
-                                    onClick={handleUploaNewADVT}
+                                    onClick={handleUploaEditADVT}
                                     id="btnPublish">
                                     Опубликовать
                                 </FormNewArtBtnPub>

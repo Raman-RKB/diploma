@@ -71,7 +71,7 @@ const MainNotReg = () => {
         const parentElement = event.target;
 
         if (parentElement.tagName === 'IMG') {
-return
+            return
         } else {
             const fileUpload = document.getElementById('file-upload');
             await fileUpload.click();
@@ -136,9 +136,13 @@ return
         console.log(data, 'количество фото в бэке')
     }, [data]);
 
-        useEffect(() => {
+    useEffect(() => {
         console.log(quantityOfPic, 'quantityOfPic')
     }, [quantityOfPic]);
+
+    useEffect(() => {
+        console.log(imgSelected, 'imgSelected')
+    }, [imgSelected]);
 
     return (
         <>

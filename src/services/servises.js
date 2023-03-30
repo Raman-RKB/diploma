@@ -138,7 +138,8 @@ export const advtApi = createApi({
     }),
 
     getAdvtById: builder.query({
-      query: (id) => `ads/${id}`
+      query: (id) => `ads/${id}`,
+      providesTags: ['advt']
     }),
 
     editAdvtData: builder.mutation({

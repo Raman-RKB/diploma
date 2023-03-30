@@ -1,7 +1,10 @@
+/* eslint-disable no-unused-vars */
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+// import { providerTags } from "rtk-query-provider-tags";
 
 export const advtApi = createApi({
   reducerPath: "advtApi",
+  tagTypes: ['advt'],
   baseQuery: fetchBaseQuery({
     baseUrl: "http://localhost:8090/",
     prepareHeaders: (headers) => {
@@ -74,7 +77,8 @@ export const advtApi = createApi({
     }),
 
     getCurrentUserAdvt: builder.query({
-      query: () => "ads/me"
+      query: () => "ads/me",
+      providesTags: ['advt']
     }),
 
     editUserData: builder.mutation({
@@ -117,6 +121,7 @@ export const advtApi = createApi({
           url: `ads?${searchParams.toString()}`,
           method: 'POST',
           body: formData,
+          invalidatesTags: ['advt']
         };
       },
     }),
@@ -180,10 +185,10 @@ export const advtApi = createApi({
         return {
           url: `ads/${id}`,
           method: 'DELETE',
+          invalidatesTags: ['advt']
         }
       }
     }),
-
   })
 });
 
@@ -206,3 +211,4 @@ export const {
   useGetImgQuery,
   useDeleteAdvtMutation
 } = advtApi;
+

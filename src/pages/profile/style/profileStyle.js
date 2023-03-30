@@ -281,7 +281,6 @@ export const SettingsImg = styled.img`
   border-radius: 50%;
 `;
 
-
 export const SettingsChangePhotoLable = styled.label`
   
 `;
@@ -462,7 +461,6 @@ export const SettingsBtn = styled.button`
     height: 46px;
     margin: 8px 0px 0;
 `;
-
 
 export const MainTitle = styled.h3`
   margin-bottom: 20px;

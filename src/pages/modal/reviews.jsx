@@ -38,10 +38,7 @@ const MainNotReg = () => {
         await refreshToken();
         await setComment({ id, text });
         data.refetch();
-        console.log(data);
     };
-
-
 
     const handleChanges = (event) => {
         setText(event.target.value);

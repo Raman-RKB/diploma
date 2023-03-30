@@ -15,7 +15,6 @@ import {
 } from './style/reviewStyle';
 
 const ReviewItems = (reviews) => {
-
     const dateString = reviews.reviews.created_on;
     const date = new Date(dateString);
     const formattedDate = date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
@@ -25,7 +24,7 @@ const ReviewItems = (reviews) => {
             <ReviewItem>
                 <ReviewLeft>
                     <ReviewImgContainer>
-                        <ReviewImg />
+                        <ReviewImg src={`http://localhost:8090/${reviews.reviews.author.avatar}`} />
                     </ReviewImgContainer>
                 </ReviewLeft>
                 <ReviewRight>

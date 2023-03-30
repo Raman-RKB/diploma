@@ -536,7 +536,7 @@ export const ReviewLeft = styled.div`
 `;
 
 export const ReviewImgContainer = styled.div`
-    width: 40px;
+  width: 40px;
   height: 40px;
   border-radius: 50%;
   background-color: #F0F0F0;
@@ -545,9 +545,10 @@ export const ReviewImgContainer = styled.div`
 export const ReviewImg = styled.img`
   display: block;
   width: 100%;
-  height: auto;
+  height: 100%;
   -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
+  border-radius: 50%;
 `;
 
 export const ReviewRight = styled.div`

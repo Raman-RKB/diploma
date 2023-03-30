@@ -400,9 +400,9 @@ export const ModalScroll = styled.div`
 `;
 
 export const ModalFormNewArt = styled.form`
+  display: ${props => props.display};
   margin-top: 5px;
   margin-bottom: 15px;
-  display: flex;
   flex-direction: column;
   width: 100%;
 

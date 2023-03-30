@@ -2,6 +2,8 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 // import { providerTags } from "rtk-query-provider-tags";
 
+//ВНЁС ИЗМЕНЕНИЯ!!!!!!!!!!!!!
+
 export const advtApi = createApi({
   reducerPath: "advtApi",
   tagTypes: ['advt'],

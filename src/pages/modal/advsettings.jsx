@@ -70,12 +70,11 @@ const AdvSettings = () => {
             if (confirm("Вы уверены, что хотите удалить фото?")) {
                 await refreshToken()
                 const imgURL = parentElement.src;
-                const indexImg = parentElement.id;
+                // const indexImg = parentElement.id;
                 const data = { id, imgURL }
                 deletePhoto(data)
                 setQuantityOfPic(quantityOfPic - 1)
-                setImgSelected(imgSelected.splice(indexImg, 1))
-
+                // setImgSelected(imgSelected.splice(indexImg, 1))
                 setSaveButtonActive(true)
             } else {
                 return
@@ -98,7 +97,6 @@ const AdvSettings = () => {
             await refreshToken()
             setQuantityOfPic(quantityOfPic + 1)
             setSaveButtonActive(true);
-
             const selectedImg = URL.createObjectURL(selectedFile)
             setImgSelected([...imgSelected, { selectedImg }])
 
@@ -109,17 +107,20 @@ const AdvSettings = () => {
         setImage(newItem);
     };
 
-    const handleTitleChange = (event) => {
-        setTitle(event.target.value);
+    const handleTitleChange = () => {
+        const titleInput = document.getElementById('formName');
+        setTitle(titleInput.value);
+        console.log(title, 'значение в title')
     };
 
-    const handleDescriptionChange = (event) => {
-        setDescription(event.target.value);
+    const handleDescriptionChange = () => {
+        const descriptionInput = document.getElementById('description');
+        setDescription(descriptionInput.value);
     };
 
-    const handlePriceChange = (event) => {
-        setPrice(event.target.value);
-        document.getElementById("formPrice").removeAttribute("value");
+    const handlePriceChange = () => {
+        const formPriceInput = document.getElementById('formPrice');
+        setPrice(formPriceInput.value);
     };
 
     useEffect(() => {
@@ -132,11 +133,12 @@ const AdvSettings = () => {
             descriptionInput.value === advtData?.description &&
             formPriceInput.value === advtData?.price.toString()
         ) {
+            console.log('в инпуты залезло почему то')
             setSaveButtonActive(false);
         } else {
             setSaveButtonActive(true);
         }
-    }, [advtData, title, description, price]);
+    }, [advtData?.title, advtData?.description, advtData?.price, title, description, price]);
 
     useEffect(() => {
         setQuantityOfPic(advtData?.images?.length)
@@ -201,7 +203,7 @@ const AdvSettings = () => {
                                         </FormNewArtImgContainer >
 
                                         <FormNewArtImgContainer
-                                            display={quantityOfPic < 0 ? 'none' : ''}>
+                                            display={quantityOfPic < 1 ? 'none' : ''}>
                                             <FormNewArtImg />
                                             <FormNewArtImgCoverInputLabel for="file-upload">
                                                 <FormNewArtImgCover onClick={handlePhotoClick}>

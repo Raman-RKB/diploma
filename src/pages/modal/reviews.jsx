@@ -47,16 +47,11 @@ const MainNotReg = () => {
     };
 
     useEffect(() => {
-        console.log(localStorage.getItem("access_token"), 'localStorage.getItem("user_register_id")')
         if (localStorage.getItem("access_token")) {
             setAuthorized(true)
         }
         return
     }, []);
-
-    useEffect(() => {
-        console.log(authorized, 'authorized')
-    }, [authorized]);
 
     return (
         <>

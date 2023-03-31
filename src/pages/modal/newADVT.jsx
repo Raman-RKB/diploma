@@ -42,9 +42,8 @@ const MainNotReg = () => {
     const [quantityOfPic, setQuantityOfPic] = useState(0);
     const [imgSelected, setImgSelected] = useState([]);
     const navigate = useNavigate();
-    const [edit, setEdit] = useState(false);
 
-    const [uploaNewADVT, { data }] = useUploaNewADVTMutation();
+    const [uploaNewADVT] = useUploaNewADVTMutation();
     const [refreshToken] = useRefreshTokenMutation();
 
     const handleUploaNewADVT = async (event) => {
@@ -61,8 +60,6 @@ const MainNotReg = () => {
         });
 
         uploaNewADVT(formData);
-        setEdit(true)
-        console.log(edit)
         navigate("/profile", { replace: true });
     };
 
@@ -131,18 +128,6 @@ const MainNotReg = () => {
             setSaveButtonActive(true)
         }
     }, [inputAndAvaFilled]);
-
-    useEffect(() => {
-        console.log(data, 'количество фото в бэке')
-    }, [data]);
-
-    useEffect(() => {
-        console.log(quantityOfPic, 'quantityOfPic')
-    }, [quantityOfPic]);
-
-    useEffect(() => {
-        console.log(imgSelected, 'imgSelected')
-    }, [imgSelected]);
 
     return (
         <>

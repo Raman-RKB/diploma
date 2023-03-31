@@ -75,10 +75,6 @@ const Product = () => {
     let { id, myadvt } = useParams();
     const navigate = useNavigate();
 
-    const handleEditdAdv = () => {
-        console.log(adv)
-    };
-
     const handleDeletedAdvt = async () => {
         await refreshToken()
         deleteAdvt(id)
@@ -185,7 +181,7 @@ const Product = () => {
                                                 </NavLink>
                                             </NavLink>
                                         </ArticleInfo>
-                                        <ArticlePrice>{adv?.price}</ArticlePrice>
+                                        <ArticlePrice>{adv?.price} ₽</ArticlePrice>
                                         <ArticleBtn myadvt={myadvt ? 'none' : ''} onClick={showPhoneClick}>Показать&nbsp;телефон
                                             <ArticleBtnSpan>
                                                 {!showPhone
@@ -196,7 +192,7 @@ const Product = () => {
                                         </ArticleBtn>
                                         <ArticleBtnBlock myadvt={!myadvt ? 'none' : 'flex'}>
                                             <StyledNavLink to={`/settings/${id}`} replace>
-                                                <ArticleBtnRedact onClick={handleEditdAdv}>Редактировать</ArticleBtnRedact>
+                                                <ArticleBtnRedact>Редактировать</ArticleBtnRedact>
                                             </StyledNavLink>
                                             <ArticleBtnRemove onClick={handleDeletedAdvt}>Снять с публикации</ArticleBtnRemove>
                                         </ArticleBtnBlock>

@@ -110,7 +110,6 @@ const AdvSettings = () => {
     const handleTitleChange = () => {
         const titleInput = document.getElementById('formName');
         setTitle(titleInput.value);
-        console.log(title, 'значение в title')
     };
 
     const handleDescriptionChange = () => {
@@ -133,7 +132,6 @@ const AdvSettings = () => {
             descriptionInput.value === advtData?.description &&
             formPriceInput.value === advtData?.price.toString()
         ) {
-            console.log('в инпуты залезло почему то')
             setSaveButtonActive(false);
         } else {
             setSaveButtonActive(true);

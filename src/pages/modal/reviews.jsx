@@ -5,7 +5,7 @@ import { useGetAdvtCommentsQuery } from "../../services/servises";
 import { useRefreshTokenMutation } from '../../services/servises';
 import { NavLink } from "react-router-dom";
 import { useSetCommentMutation } from '../../services/servises';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import {
     ContainerBg,
@@ -25,10 +25,11 @@ import {
 
 const MainNotReg = () => {
     const [text, setText] = useState('');
+    const [authorized, setAuthorized] = useState(false);
     const [setComment] = useSetCommentMutation();
     const [inputAndAvaFilled, setInputAndAvaFilled] = useState();
     let { id } = useParams();
-    const { data } = useGetAdvtCommentsQuery(id);
+    const { data: getAdvtComments } = useGetAdvtCommentsQuery(id);
     const [refreshToken] = useRefreshTokenMutation();
 
     const handleSaveChanges = async (event) => {
@@ -37,13 +38,20 @@ const MainNotReg = () => {
         textArea.value = '';
         await refreshToken();
         await setComment({ id, text });
-        data.refetch();
+        getAdvtComments.refetch();
     };
 
     const handleChanges = (event) => {
         setText(event.target.value);
         setInputAndAvaFilled(event.target.value)
     };
+
+    useEffect(() => {
+        if (localStorage.getItem("access_token")) {
+            setAuthorized(true)
+        }
+        return
+    }, []);
 
     return (
         <>
@@ -59,7 +67,7 @@ const MainNotReg = () => {
                                 </NavLink>
                             </ModalBtnClose>
                             <ModalScroll>
-                                <ModalFormNewArt>
+                                <ModalFormNewArt display={authorized ? 'flex' : 'none'}>
                                     <FormNewArtBlock>
                                         <FormNewArtLabel for="text">Добавить отзыв</FormNewArtLabel>
                                         <FormNewArtArea onChange={handleChanges} name="text" id="formArea" cols="auto" rows="5"
@@ -73,7 +81,7 @@ const MainNotReg = () => {
                                     </FormNewArtBtnPub>
                                 </ModalFormNewArt>
                                 <ModalReviews>
-                                    {data && data.map((item) => (
+                                    {getAdvtComments && getAdvtComments.map((item) => (
                                         <ReviewItems key={item.id} reviews={item} />
                                     ))}
                                 </ModalReviews>

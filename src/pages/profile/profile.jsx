@@ -1,5 +1,6 @@
 /* eslint-disable no-debugger */
 // import React, { useContext, useState, useEffect } from 'react';
+//Правка
 import Logo from './img/logo.png';
 import LogoMob from './img/logo-mob.png';
 import FooterAll from '../modal/footer';
@@ -60,6 +61,7 @@ const Profile = () => {
     const [inputAndAvaFilled, setInputAndAvaFilled] = useState();
     const [saveButtonActive, setSaveButtonActive] = useState(false);
     const [actualUserData, setActualUserData] = useState('');
+    const [imgSelected, setImgSelected] = useState([]);
 
     const [getCurrentUser, { data: currentUser }] = useGetCurrentUserMutation();
     const [editUserData] = useEditUserDataMutation();
@@ -104,6 +106,9 @@ const Profile = () => {
             formData.append('file', selectedFile);
             setInputAndAvaFilled(true)
             uploadUserAvatar(formData)
+
+            const selectedImg = URL.createObjectURL(selectedFile)
+            setImgSelected([{ selectedImg }])
 
         };
     }
@@ -157,15 +162,15 @@ const Profile = () => {
     }, [currentUser]);
 
     useEffect(() => {
-        console.log(data, 'данные об объявлениях')
-    }, [data]);
-
-        useEffect(() => {
-            setName(actualUserData?.name)
-            setSurname(actualUserData?.surname)
-            setCity(actualUserData?.city)
-            setPhone(actualUserData?.phone)
+        setName(actualUserData?.name)
+        setSurname(actualUserData?.surname)
+        setCity(actualUserData?.city)
+        setPhone(actualUserData?.phone)
     }, [actualUserData]);
+
+    useEffect(() => {
+        console.log(currentUser, 'currentUser')
+    }, [currentUser]);
 
     return (
         <>
@@ -207,7 +212,10 @@ const Profile = () => {
                                         <ProfileSettings>
                                             <SettingsLeft>
                                                 <SettingsImgContainer>
-                                                    <SettingsImg src={`http://localhost:8090/${actualUserData?.avatar}`} />
+                                                    <SettingsImg
+                                                        src={imgSelected === undefined ? '' :
+                                                            (imgSelected[0]?.selectedImg ? imgSelected[0]?.selectedImg : `http://localhost:8090/${currentUser?.avatar}`)}
+                                                    />
                                                 </SettingsImgContainer >
                                                 <SettingsChangePhotoLable for="file-upload">
                                                     <SettingsChangePhotoButton
@@ -234,15 +242,15 @@ const Profile = () => {
                                                     </SettingsDiv>
                                                     <SettingsDiv>
                                                         <SettingsFormLabel for="lname">Фамилия</SettingsFormLabel>
-                                                        <SettingsFormInput   onChange={handleSurnameChange}
+                                                        <SettingsFormInput onChange={handleSurnameChange}
                                                             id="settings-fname"
                                                             name="fname"
                                                             type="text"
-                                                            defaultValue={actualUserData?.surname}/>
+                                                            defaultValue={actualUserData?.surname} />
                                                     </SettingsDiv>
                                                     <SettingsDiv>
                                                         <SettingsFormLabel for="city">Город</SettingsFormLabel>
-                                                        <SettingsFormInput   onChange={handleCityChange}
+                                                        <SettingsFormInput onChange={handleCityChange}
                                                             id="settings-fname"
                                                             name="fname"
                                                             type="text"
@@ -250,7 +258,7 @@ const Profile = () => {
                                                     </SettingsDiv>
                                                     <SettingsDiv>
                                                         <SettingsFormLabel for="phone">Телефон</SettingsFormLabel>
-                                                        <SettingsPhoneInput   onChange={handlePhoneChange}
+                                                        <SettingsPhoneInput onChange={handlePhoneChange}
                                                             id="settings-fname"
                                                             name="fname"
                                                             type="text"

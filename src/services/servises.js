@@ -4,7 +4,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const advtApi = createApi({
   reducerPath: "advtApi",
-  tagTypes: ['advt'],
+  tagTypes: ['advt', 'comments'],
   baseQuery: fetchBaseQuery({
     baseUrl: "http://localhost:8090/",
     prepareHeaders: (headers) => {
@@ -19,11 +19,13 @@ export const advtApi = createApi({
   endpoints: (builder) => ({
 
     getAlladvt: builder.query({
-      query: () => "ads"
+      query: () => "ads",
+      providesTags: ['advt']
     }),
 
     getAdvtComments: builder.query({
-      query: (advtId) => `ads/${advtId}/comments`
+      query: (advtId) => `ads/${advtId}/comments`,
+      providesTags: ['comments']
     }),
 
     registerUser: builder.mutation({
@@ -121,11 +123,10 @@ export const advtApi = createApi({
           url: `ads?${searchParams.toString()}`,
           method: 'POST',
           body: formData,
-          invalidatesTags: ['advt']
         };
       },
+      invalidatesTags: ['advt']
     }),
-
 
     setComment: builder.mutation({
       query: ({ id, text }) => ({
@@ -133,10 +134,12 @@ export const advtApi = createApi({
         method: 'POST',
         body: { text },
       }),
+      invalidatesTags: ['comments']
     }),
 
     getAdvtById: builder.query({
-      query: (id) => `ads/${id}`
+      query: (id) => `ads/${id}`,
+      providesTags: ['advt']
     }),
 
     editAdvtData: builder.mutation({
@@ -145,6 +148,7 @@ export const advtApi = createApi({
         method: 'PATCH',
         body: formData,
       }),
+      invalidatesTags: ['advt']
     }),
 
     addPhoto: builder.mutation({
@@ -157,7 +161,8 @@ export const advtApi = createApi({
           method: 'POST',
           body: formData,
         }
-      }
+      },
+      invalidatesTags: ['advt']
     }),
 
     deletePhoto: builder.mutation({
@@ -169,7 +174,8 @@ export const advtApi = createApi({
           url: `ads/${data.id}/image?file_url=${new_url}`,
           method: 'DELETE',
         }
-      }
+      },
+      invalidatesTags: ['advt']
     }),
 
     getImg: builder.query({
@@ -178,16 +184,14 @@ export const advtApi = createApi({
 
     deleteAdvt: builder.mutation({
       query: (id) => {
-
         const searchParams = new URLSearchParams();
         searchParams.append('pk', id);
-
         return {
           url: `ads/${id}`,
           method: 'DELETE',
-          invalidatesTags: ['advt']
         }
-      }
+      },
+      invalidatesTags: ['advt']
     }),
   })
 });

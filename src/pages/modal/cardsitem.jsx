@@ -28,7 +28,7 @@ const Cardsitem = ({ id, title, price, place, date, myAdvt, picture }) => {
                     <NavLink to={myAdvt ? `/product/${myAdvt}/${id}` : `/product/${id}`} replace>
                         <CardTitle>{title}</CardTitle>
                     </NavLink>
-                    <CardPrice>{price}</CardPrice>
+                    <CardPrice>{price} ₽</CardPrice>
                     <CardPlace>{place}</CardPlace>
                     <CardDate>{date}</CardDate>
                 </CardContainer>

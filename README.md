@@ -30,4 +30,4 @@ The following technologies were used to develop this project:
 
 ## Demo Link
 
-Watch the demo of the project at .
+Watch the demo of the project at https://youtu.be/wmoEXeliMhQ.

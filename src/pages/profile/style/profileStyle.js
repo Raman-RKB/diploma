@@ -81,8 +81,8 @@ export const HeaderBtnMainEnter = styled.button`
     }
 `;
 
-export const HeaderBtnLk = styled.button`
-  width: 173px;
+export const QuitAccount = styled.button`
+  width: 232px;
   height: 40px;
   margin-left: 10px;
     border: 1px solid #FFFFFF;
@@ -95,12 +95,13 @@ export const HeaderBtnLk = styled.button`
   &:hover {
   background: rgba(255, 255, 255, 0.15);
   border: 1px solid #FFFFFF;
-}
+  }
 
   @media screen and (max-width: 620px) {
   display: none;
     }
 `;
+
 
 export const Main = styled.main`
   width: 224px;

@@ -25,6 +25,8 @@ const Registration = () => {
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
     const [city, setCity] = useState('');
+    const [phone, setPhone] = useState('');
+
 
     const navigate = useNavigate();
     const [registerUser, { data }] = useRegisterUserMutation();
@@ -33,7 +35,7 @@ const Registration = () => {
         event.preventDefault();
         if (password === repeatPassword) {
 
-            const userData = { email, password, name, surname, city };
+            const userData = { email, password, name, surname, city, phone };
             registerUser(userData);
 
         } else {
@@ -63,7 +65,7 @@ const Registration = () => {
     }
 
     const handleFirstNameChange = (event) => {
-       setName(event.target.value);
+        setName(event.target.value);
     }
 
     const handleLastNameChange = (event) => {
@@ -72,6 +74,10 @@ const Registration = () => {
 
     const handleCityChange = (event) => {
         setCity(event.target.value);
+    }
+
+    const handlePhoneChange = (event) => {
+        setPhone(event.target.value);
     }
 
     return (
@@ -90,6 +96,7 @@ const Registration = () => {
                             <ModalInput type="text" name="first-name" id="first-name" placeholder="Имя (необязательно)" onChange={handleFirstNameChange} />
                             <ModalInput type="text" name="first-last" id="first-last" placeholder="Фамилия (необязательно)" onChange={handleLastNameChange} />
                             <ModalInput type="text" name="city" id="city" placeholder="Город (необязательно)" onChange={handleCityChange} />
+                            <ModalInput type="phone" name="phone" id="phone" placeholder="Телефон (необязательно)" onChange={handlePhoneChange} />
                             <ModalBtnSignupEnt onClick={handleRegister} id="btnSignUp">Зарегистрироваться</ModalBtnSignupEnt>
                         </ModalFormLogin>
                     </ModalBlock>

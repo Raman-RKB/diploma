@@ -30,7 +30,7 @@ const MainNotReg = () => {
     const { data } = useGetAlladvtQuery();
     const [searchInputValue, setSearchInputValue] = useState("");
     const [searchResults, setSearchResults] = useState([]);
-    
+
     const handleSearchInputChange = (event) => {
         setSearchInputValue(event.target.value);
     };
@@ -56,7 +56,7 @@ const MainNotReg = () => {
         <Container>
             <Header>
                 <HeaderNav>
-                    <NavLink to={`/login`} replace>
+                    <NavLink to={localStorage.user_register_id ? `/profile` : `/registaration`} replace>
                         <HeaderBtnMainEnter>Вход в личный кабинет</HeaderBtnMainEnter>
                     </NavLink>
                 </HeaderNav>
@@ -89,7 +89,7 @@ const MainNotReg = () => {
                     <MainContent>
                         <ContentCards>
                             {searchResults === '' ? data.map((item) => (
-                                <CardsItem 
+                                <CardsItem
                                     key={item.id}
                                     id={item.id}
                                     title={item.title}
@@ -102,7 +102,7 @@ const MainNotReg = () => {
                                 searchResults.map((item) => (
                                     <CardsItem
                                         key={item.id}
-                                         id={item.id}
+                                        id={item.id}
                                         title={item.title}
                                         price={item.price}
                                         place={item.user.city}

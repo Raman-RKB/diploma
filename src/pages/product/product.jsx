@@ -69,6 +69,7 @@ const Product = () => {
     const [selectedImg, setSelectedImg] = useState();
     const [nextImg, setNextImg] = useState(0);
     const [showPhone, setShowPhone] = useState(false);
+    const [bigPicture, setBigPicture] = useState(2);
     const { data } = useGetAlladvtQuery();
     const [deleteAdvt] = useDeleteAdvtMutation();
     const [refreshToken] = useRefreshTokenMutation();
@@ -90,6 +91,12 @@ const Product = () => {
     };
 
     const handleNextPhotoClick = () => {
+        const nextIndex = (nextImg + 1) % adv?.images.length;
+        setNextImg(nextIndex);
+        setSelectedImg(`http://localhost:8090/${adv?.images[nextIndex]?.url}`);
+    };
+
+    const HandleImgBarMobCircle = () => {
         const nextIndex = (nextImg + 1) % adv?.images.length;
         setNextImg(nextIndex);
         setSelectedImg(`http://localhost:8090/${adv?.images[nextIndex]?.url}`);
@@ -153,7 +160,7 @@ const Product = () => {
                                             <ArticleImg onClick={handleNextPhotoClick} src={selectedImg && selectedImg} />
                                         </ArticleImgContainer>
                                         <ArticleImgBar>
-                                            {adv?.images?.slice(1, 5).map((image, index) => (
+                                            {adv?.images?.slice(0, 5).map((image, index) => (
                                                 <ArticleImgBarDiv key={index}>
                                                     <ArticleImgBarDivImg
                                                         onClick={handleSelectImg}
@@ -164,7 +171,7 @@ const Product = () => {
                                         </ArticleImgBar>
                                         <ArticleImgBarMob containerWidth={`${adv?.images?.length * 11.333}px`}>
                                             {adv?.images?.map((img, index) => (
-                                                <ImgBarMobCircle key={index} active={nextImg === index ? '#FFFFFF' : ''} />
+                                                <ImgBarMobCircle onClick={HandleImgBarMobCircle} id={index} key={index} active={nextImg === index ? '#FFFFFF' : ''} />
                                             ))}
                                         </ArticleImgBarMob>
                                     </ArticleFillImg>

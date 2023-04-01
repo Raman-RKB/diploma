@@ -23,7 +23,6 @@ import {
     MainContainer,
     MainTitle,
     MainContent,
-    HeaderBtnLk,
     MainCenterBlock,
     HeaderLogo,
     LogoMobImg,
@@ -50,7 +49,8 @@ import {
     SettingsImg,
     ContentCards,
     SettingsChangePhotoLable,
-    SettingsChangePhotoButton
+    SettingsChangePhotoButton,
+    QuitAccount
 } from './style/profileStyle';
 
 const Profile = () => {
@@ -60,7 +60,6 @@ const Profile = () => {
     const [phone, setPhone] = useState('');
     const [inputAndAvaFilled, setInputAndAvaFilled] = useState();
     const [saveButtonActive, setSaveButtonActive] = useState(false);
-    const [actualUserData, setActualUserData] = useState('');
     const [imgSelected, setImgSelected] = useState([]);
 
     const [getCurrentUser, { data: currentUser }] = useGetCurrentUserMutation();
@@ -71,18 +70,15 @@ const Profile = () => {
 
     const handleSaveChanges = async (event) => {
         event.preventDefault();
-        const inputs = document.querySelectorAll('input[type="text"], input[type="tel"]');
-
         await refreshToken();
         const userData = { phone, name, surname, city };
         editUserData(userData);
         setSaveButtonActive(false)
         getCurrentUser()
-        setActualUserData(currentUser)
-        setActualUserData(`http://localhost:8090/${currentUser}`)
-        inputs.forEach((input) => {
-            input.value = '';
-        });
+    };
+
+    const handleQuit = async () => {
+        localStorage.clear()
     };
 
     const handleAvatarClick = (event) => {
@@ -158,18 +154,17 @@ const Profile = () => {
     }, [inputAndAvaFilled]);
 
     useEffect(() => {
-        setActualUserData(currentUser)
+        if (currentUser) {
+            console.log(currentUser, 'currentUser')
+        }
+        return
     }, [currentUser]);
 
     useEffect(() => {
-        setName(actualUserData?.name)
-        setSurname(actualUserData?.surname)
-        setCity(actualUserData?.city)
-        setPhone(actualUserData?.phone)
-    }, [actualUserData]);
-
-    useEffect(() => {
-        console.log(currentUser, 'currentUser')
+        setName(localStorage.user_register_name)
+        setSurname(localStorage.user_register_surname)
+        setCity(localStorage.user_register_city)
+        setPhone(localStorage.user_register_phone)
     }, [currentUser]);
 
     return (
@@ -187,8 +182,8 @@ const Profile = () => {
                             <NavLink to={`/addnewat`} replace>
                                 <HeaderBtnMainEnter>Разместить объявление</HeaderBtnMainEnter>
                             </NavLink>
-                            <NavLink to={`/profile`} replace>
-                                <HeaderBtnLk >Личный кабинет</HeaderBtnLk>
+                            <NavLink to={`/`} replace>
+                                <QuitAccount onClick={handleQuit}>Выйти из личного кабинета</QuitAccount>
                             </NavLink>
                         </HeaderNav>
                     </Header>
@@ -205,7 +200,7 @@ const Profile = () => {
                                         </NavLink>
                                     </MenuForm>
                                 </MainMenu>
-                                <MainH2>Здравствуйте, {actualUserData?.name}!</MainH2>
+                                <MainH2>Здравствуйте, {name}!</MainH2>
                                 <MainProfile>
                                     <ProfileContent>
                                         <ProfileTitle>Настройки профиля</ProfileTitle>
@@ -238,7 +233,7 @@ const Profile = () => {
                                                             id="settings-fname"
                                                             name="fname"
                                                             type="text"
-                                                            defaultValue={actualUserData?.name} />
+                                                            defaultValue={name} />
                                                     </SettingsDiv>
                                                     <SettingsDiv>
                                                         <SettingsFormLabel for="lname">Фамилия</SettingsFormLabel>
@@ -246,7 +241,7 @@ const Profile = () => {
                                                             id="settings-fname"
                                                             name="fname"
                                                             type="text"
-                                                            defaultValue={actualUserData?.surname} />
+                                                            defaultValue={surname} />
                                                     </SettingsDiv>
                                                     <SettingsDiv>
                                                         <SettingsFormLabel for="city">Город</SettingsFormLabel>
@@ -254,7 +249,7 @@ const Profile = () => {
                                                             id="settings-fname"
                                                             name="fname"
                                                             type="text"
-                                                            defaultValue={actualUserData?.city} />
+                                                            defaultValue={city} />
                                                     </SettingsDiv>
                                                     <SettingsDiv>
                                                         <SettingsFormLabel for="phone">Телефон</SettingsFormLabel>
@@ -262,7 +257,7 @@ const Profile = () => {
                                                             id="settings-fname"
                                                             name="fname"
                                                             type="text"
-                                                            defaultValue={actualUserData?.phone} />
+                                                            defaultValue={phone} />
                                                     </SettingsDiv>
                                                     <SettingsBtn
                                                         active={!saveButtonActive ? '#D9D9D9' : '#009EE4'}

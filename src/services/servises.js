@@ -1,6 +1,5 @@
 /* eslint-disable no-unused-vars */
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-// import { providerTags } from "rtk-query-provider-tags";
 
 export const advtApi = createApi({
   reducerPath: "advtApi",
@@ -40,6 +39,7 @@ export const advtApi = createApi({
         localStorage.setItem("user_register_city", response.city);
         localStorage.setItem("user_register_name", response.name);
         localStorage.setItem("user_register_surname", response.surname);
+        localStorage.setItem("user_register_phone", response.phone);
         return response;
       },
     }),
@@ -59,7 +59,8 @@ export const advtApi = createApi({
     }),
 
     getCurrentUser: builder.mutation({
-      query: () => 'user'
+      query: () => 'user',
+      providesTags: ['advt']
     }),
 
     refreshToken: builder.mutation({
@@ -101,6 +102,7 @@ export const advtApi = createApi({
         localStorage.setItem("avatar", response.access_token);
         return response;
       },
+      invalidatesTags: ['advt']
     }),
 
     uploaNewADVT: builder.mutation({

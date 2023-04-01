@@ -1,6 +1,4 @@
 /* eslint-disable no-debugger */
-// import React, { useContext, useState, useEffect } from 'react';
-//Правка
 import Logo from './img/logo.png';
 import LogoMob from './img/logo-mob.png';
 import FooterAll from '../modal/footer';
